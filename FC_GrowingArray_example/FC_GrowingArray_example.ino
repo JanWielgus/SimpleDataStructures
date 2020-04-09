@@ -12,8 +12,10 @@ bool test1();
 
 void setup()
 {
-
-
+	Serial.begin(115200);
+	delay(1000);
+	Serial.print("Test result: ");
+	Serial.println(test1());
 }
 
 void loop()

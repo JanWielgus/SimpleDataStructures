@@ -94,9 +94,23 @@ public:
             return array[index];
         return nullItem;
     }
+	
+	
+	const T& get(uint16_t index) const
+    {
+        if (index < size)
+            return array[index];
+        return nullItem;
+    }
 
 
     T& operator[](uint16_t index)
+    {
+        return get(index);
+    }
+	
+	
+	const T& operator[](uint16_t index) const
     {
         return get(index);
     }
@@ -106,9 +120,15 @@ public:
     {
         return array;
     }
+	
+	
+	const T* getArray() const
+	{
+		return array;
+	}
 
 
-    uint16_t getSize()
+    uint16_t getSize() const
     {
         return size;
     }
