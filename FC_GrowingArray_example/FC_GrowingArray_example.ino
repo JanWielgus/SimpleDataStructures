@@ -26,7 +26,7 @@ void loop()
 
 bool test1()
 {
-    FC_GrowingArrayClass<uint16_t>* testArray = new FC_GrowingArrayClass<uint16_t>;
+    FC_GrowingArray<uint16_t>* testArray = new FC_GrowingArray<uint16_t>;
 
     testArray->add(1);
     testArray->add(2);
@@ -49,7 +49,7 @@ bool test1()
         return false;
 
 
-    FC_GrowingArrayClass<uint16_t> deepCopy = *testArray;
+    FC_GrowingArray<uint16_t> deepCopy = *testArray;
     delete testArray;
     if (deepCopy[1] != 2)
         return false;

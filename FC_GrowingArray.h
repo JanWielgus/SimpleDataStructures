@@ -12,7 +12,7 @@
 
 
 template <class T>
-class FC_GrowingArrayClass
+class FC_GrowingArray
 {
 private:
     T* array;
@@ -20,13 +20,13 @@ private:
     T nullItem; // returns that item for example if index is out of bounds
 
 public:
-    FC_GrowingArrayClass()
+    FC_GrowingArray()
     {
         size = 0;
     }
 
 
-    ~FC_GrowingArrayClass()
+    ~FC_GrowingArray()
     {
         if (size > 0)
             delete[] array;
@@ -34,7 +34,7 @@ public:
 
 
     // copy constructor
-    FC_GrowingArrayClass(const FC_GrowingArrayClass& other)
+    FC_GrowingArray(const FC_GrowingArray& other)
     {
         size = other.size;
 
@@ -50,7 +50,7 @@ public:
 
 
     // overloaded assignment operator
-    FC_GrowingArrayClass& operator=(const FC_GrowingArrayClass& other)
+    FC_GrowingArray& operator=(const FC_GrowingArray& other)
     {
         if (this != &other)// self-assignment check expected
         {
