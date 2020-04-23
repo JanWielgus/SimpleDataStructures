@@ -104,6 +104,12 @@ public:
 	{
 		return queueLength == 0;
 	}
+	
+	
+	bool isFull() const
+	{
+		return queueLength == size;
+	}
 
 
 	void enqueue(const T& item)
