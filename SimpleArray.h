@@ -19,7 +19,7 @@ private:
     T* array = nullptr;
     const size_t MaxSize;
     size_t arraySize = 0; // amt of elements in the array
-    T null_item; // returned if provided index is out of bounds
+    T null_item; // returned when provided index is out of bounds
 
 
 public:
@@ -57,7 +57,7 @@ public:
 
 
     // overloaded assignment operator
-    SimpleArray& operator=(const SimpleArray& other) = delete; // temporary deleted
+    SimpleArray& operator=(const SimpleArray& other) = delete; // temporary deleted //TODO: this
 
 
     bool add(const T& item) override
@@ -141,6 +141,12 @@ public:
         if (arraySize == 0)
             return true;
         return false;
+    }
+
+
+    void clear() override
+    {
+        arraySize = 0;
     }
 };
 
