@@ -13,6 +13,7 @@
 template <class T>
 class IQueue
 {
+public:
     virtual ~IQueue() {}
 
     /**

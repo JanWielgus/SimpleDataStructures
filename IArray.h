@@ -16,6 +16,7 @@
 template <class T>
 class IArray
 {
+public:
     virtual ~IArray() {}
 
     /**

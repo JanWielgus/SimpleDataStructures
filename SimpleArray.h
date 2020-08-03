@@ -133,13 +133,13 @@ public:
     }
 
 
-    bool isFull() override
+    bool isFull() const override
     {
         return arraySize >= MaxSize;
     }
 
 
-    bool isEmpty() override
+    bool isEmpty() const override
     {
         return arraySize == 0;
     }
