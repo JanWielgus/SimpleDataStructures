@@ -4,7 +4,7 @@
     Author:     Jan Wielgus
 */
 
-#include <FC_GrowingArray.h>
+#include <SimpleGrowingArray.h>
 
 // something that pretend unit tests
 bool test1();
@@ -26,7 +26,7 @@ void loop()
 
 bool test1()
 {
-    FC_GrowingArray<uint16_t>* testArray = new FC_GrowingArray<uint16_t>;
+    SimpleGrowingArray<uint16_t>* testArray = new SimpleGrowingArray<uint16_t>;
 
     testArray->add(1);
     testArray->add(2);
@@ -45,13 +45,12 @@ bool test1()
         return false;
     if ((*testArray)[7] != 532)
         return false;
-    if (testArray->getArray()[3] != 22)
-        return false;
 
 
-    FC_GrowingArray<uint16_t> deepCopy = *testArray;
+    SimpleGrowingArray<uint16_t> deepCopy = *testArray;
     delete testArray;
     if (deepCopy[1] != 2)
         return false;
     
+    return true;
 }

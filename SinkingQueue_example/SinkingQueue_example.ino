@@ -4,7 +4,7 @@
     Author:     Jan Wielgus
 */
 
-#include <FC_SinkingQueue.h>
+#include <SinkingQueue.h>
 
 int test1();
 
@@ -26,7 +26,7 @@ void loop()
 
 int test1()
 {
-    FC_SinkingQueue<uint16_t> testQueue(5);
+    SinkingQueue<uint16_t> testQueue(5);
 
     testQueue.enqueue(1);
     testQueue.enqueue(123);
@@ -34,7 +34,7 @@ int test1()
     testQueue.enqueue(5432);
     testQueue.enqueue(2);
 
-    if (testQueue.getQueueLength() != testQueue.getSize() || testQueue.getQueueLength() != 5)
+    if (testQueue.getQueueLength() != 5)
         return 101;
     if (testQueue.peek() != 1)
         return 1;
