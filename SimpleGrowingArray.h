@@ -10,31 +10,21 @@
 #ifndef SIMPLEGROWINGARRAY_H
 #define SIMPLEGROWINGARRAY_H
 
-#include <IArray.h>
-
-// FIXME: This class can be inherited from SimpleArray. Now some code is duplicated !!!
+#include <SimpleArray.h>
 
 
 template <class T>
-class SimpleGrowingArray : public IArray<T>
+class SimpleGrowingArray : public SimpleArray<T>
 {
-private:
-    T* array = nullptr;
-    size_t maxSize = 0; // size of allocated data
-    size_t arraySize = 0; // amt of items in the array
-    T null_item; // returned when provided index is out of bounds
-
-
 public:
     SimpleGrowingArray()
+        : SimpleArray()
     {
-        array = nullptr;
-        maxSize = 0;
-        arraySize = 0;
     }
 
 
     SimpleGrowingArray(size_t initialSize)
+        : SimpleArray()
     {
         ensureCapacity(initialSize);
         arraySize = 0;
@@ -48,6 +38,7 @@ public:
      * (regardless of allocated data by other object).
      */
     SimpleGrowingArray(const SimpleGrowingArray& other)
+        : SimpleArray()
     {
         ensureCapacity(other.arraySize);
         arraySize = other.arraySize;
@@ -58,11 +49,7 @@ public:
     }
 
 
-    ~SimpleGrowingArray()
-    {
-        if (maxSize > 0)
-            delete [] array;
-    }
+    virtual ~SimpleGrowingArray() {}
 
 
     /**
@@ -76,11 +63,11 @@ public:
     {
         if (this != &other)
         {
-            if (maxSize != other.arraySize)
+            if (MaxSize != other.arraySize)
             {
                 delete [] array;
                 array = new T[other.arraySize];
-                maxSize = other.arraySize;
+                MaxSize = other.arraySize;
                 arraySize = other.arraySize;
             }
 
@@ -116,62 +103,6 @@ public:
     }
 
 
-    T& get(size_t index) override
-    {
-        if (index < arraySize)
-            return array[index];
-        return null_item;
-    }
-
-
-    const T& get(size_t index) const override
-    {
-        if (index < arraySize)
-            return array[index];
-        return null_item;
-    }
-
-
-    T& operator[](size_t index) override
-    {
-        return get(index);
-    }
-
-
-    const T& operator[](size_t index) const override
-    {
-        return get(index);
-    }
-
-
-    bool replace(size_t index, const T& newItem) override
-    {
-        if (index >= arraySize)
-            return false;
-        
-        array[index] = newItem;
-        return true;
-    }
-
-
-    size_t getSize() const override
-    {
-        return arraySize;
-    }
-
-
-    bool isFull() const override
-    {
-        return false;
-    }
-
-
-    bool isEmpty() const override
-    {
-        return arraySize == 0;
-    }
-
-
     /**
      * @brief Remove all data and free the allocated memory.
      */
@@ -192,10 +123,10 @@ public:
      */
     void ensureCapacity(size_t minimumSize)
     {
-        if (minimumSize <= maxSize)
+        if (minimumSize <= MaxSize)
             return;
         
-        if (maxSize == 0)
+        if (MaxSize == 0)
             array = new T[minimumSize];
         else
         {
@@ -208,7 +139,7 @@ public:
             array = biggerArray;
         }
 
-        maxSize = minimumSize;
+        MaxSize = minimumSize;
     }
 };
 

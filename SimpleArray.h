@@ -15,11 +15,20 @@
 template <class T>
 class SimpleArray : public IArray<T>
 {
-private:
+protected:
     T* array = nullptr;
-    const size_t MaxSize;
+    size_t MaxSize;
     size_t arraySize = 0; // amt of elements in the array
     T null_item; // returned when provided index is out of bounds
+
+
+    // protected constructor for classes that derive from this class
+    SimpleArray()
+    {
+        array = nullptr;
+        MaxSize = 0;
+        arraySize = 0;
+    }
 
 
 public:
@@ -49,7 +58,7 @@ public:
     }
 
 
-    ~SimpleArray()
+    virtual ~SimpleArray()
     {
         if (MaxSize > 0)
             delete [] array;
@@ -60,7 +69,7 @@ public:
     SimpleArray& operator=(const SimpleArray& other) = delete; // temporary deleted //TODO: this
 
 
-    bool add(const T& item) override
+    virtual bool add(const T& item) override
     {
         if (isFull())
             return false;
@@ -70,7 +79,7 @@ public:
     }
 
 
-    bool add(const T& item, size_t index) override
+    virtual bool add(const T& item, size_t index) override
     {
         if (isFull())
             return false;
@@ -86,17 +95,13 @@ public:
 
     T& get(size_t index) override
     {
-        if (index < arraySize)
-            return array[index];
-        return null_item;
+        return index < arraySize ? array[index] : null_item;
     }
 
 
     const T& get(size_t index) const override
     {
-        if (index < arraySize)
-            return array[index];
-        return null_item;
+        return index < arraySize ? array[index] : null_item;
     }
 
 
@@ -140,7 +145,7 @@ public:
     }
 
 
-    void clear() override
+    virtual void clear() override
     {
         arraySize = 0;
     }
