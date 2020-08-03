@@ -1,7 +1,7 @@
 /**
  * @file IQueue.h
  * @author Jan Wielgus
- * @brief Common interface for all queue types
+ * @brief Common interface for queues
  * @date 2020-08-03
  * 
  */
@@ -19,14 +19,6 @@ class IQueue
      * @brief Removes all objects from the queue.
      */
     virtual void clear() = 0;
-
-    /**
-     * @brief Checks if queue contains an element.
-     * 
-     * @param element Element to check if is in the queue
-     * @return true if element is in the queue, otherwise returns false
-     */
-    virtual bool contains(const T& element) const = 0;
 
     /**
      * @brief Adds new item to the end of the queue.
@@ -49,7 +41,14 @@ class IQueue
      * 
      * @return Referenve to the first element in the queue.
      */
-    virtual T& peek() const = 0;
+    virtual T& peek() = 0;
+
+    /**
+     * @brief Returns item from the queue beginning without removing it.
+     * 
+     * @return Const referenve to the first element in the queue.
+     */
+    virtual const T& peek() const = 0;
 
     /**
      * @brief Checks if queue is empty.
