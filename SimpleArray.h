@@ -32,11 +32,32 @@ public:
     }
 
 
+    // copy constructor
+    SimpleArray(const SimpleArray& other)
+        : MaxSize(other.MaxSize)
+    {
+        arraySize = other.arraySize;
+        null_item = other.null_item;
+
+        if (MaxSize > 0)
+        {
+            array = new T[MaxSize];
+            
+            for (size_t i = 0; i < arraySize; i++)
+                array[i] = other.array[i];
+        }
+    }
+
+
     ~SimpleArray()
     {
         if (MaxSize > 0)
             delete [] array;
     }
+
+
+    // overloaded assignment operator
+    SimpleArray& operator=(const SimpleArray& other) = delete; // temporary deleted
 
 
     bool add(const T& item) override
