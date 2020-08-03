@@ -28,6 +28,7 @@ class IArray
 
     /**
      * @brief Adds new item to the array at the specified index.
+     * Do not remove any items from the array.
      * 
      * @param item Reference to item to be added to the array
      * @param index Index where to add new item
@@ -59,6 +60,16 @@ class IArray
      * @brief Overloaded array subscript operator.
      */
     virtual const T& operator[](size_t index) const = 0;
+
+    /**
+     * @brief Replace item at the specified index with another item.
+     * Old item is just deleted from the array.
+     * 
+     * @param index Index of the item to be replaced
+     * @param newItem New item that will be put in the index
+     * @return false if index is out of bounds or just something bad happened
+     */
+    virtual bool replace(size_t index, const T& newItem) = 0;
 
     /**
      * @brief Returns amount of item in the array.
