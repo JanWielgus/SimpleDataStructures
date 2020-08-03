@@ -130,17 +130,13 @@ public:
 
     bool isFull() override
     {
-        if (arraySize >= MaxSize)
-            return true;
-        return false;
+        return arraySize >= MaxSize;
     }
 
 
     bool isEmpty() override
     {
-        if (arraySize == 0)
-            return true;
-        return false;
+        return arraySize == 0;
     }
 
 

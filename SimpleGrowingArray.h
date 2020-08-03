@@ -12,6 +12,8 @@
 
 #include <IArray.h>
 
+// FIXME: This class can be inherited from SimpleArray. Now some code is duplicated !!!
+
 
 template <class T>
 class SimpleGrowingArray : public IArray<T>
@@ -160,17 +162,13 @@ public:
 
     bool isFull() const override
     {
-        //if (arraySize >= maxSize)
-            //return true;
         return false;
     }
 
 
     bool isEmpty() const override
     {
-        if (arraySize == 0)
-            return true;
-        return false;
+        return arraySize == 0;
     }
 
 
