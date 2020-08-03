@@ -10,9 +10,11 @@
 #ifndef SIMPLEGROWINGARRAY_H
 #define SIMPLEGROWINGARRAY_H
 
+#include <IArray.h>
+
 
 template <class T>
-class SimpleGrowingArray
+class SimpleGrowingArray : public IArray<T>
 {
 private:
     T* array = nullptr;

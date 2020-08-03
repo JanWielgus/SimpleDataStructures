@@ -13,7 +13,7 @@
 
 
 template <class T>
-class SimpleArray : IArray<T>
+class SimpleArray : public IArray<T>
 {
 private:
     T* array = nullptr;
