@@ -16,15 +16,20 @@
 template <class T>
 class SimpleGrowingArray : public SimpleArray<T>
 {
+private:
+    using SimpleArray<T>::array;
+    using SimpleArray<T>::MaxSize;
+    using SimpleArray<T>::arraySize;
+    using SimpleArray<T>::null_item;
+
+
 public:
     SimpleGrowingArray()
-        : SimpleArray()
     {
     }
 
 
     SimpleGrowingArray(size_t initialSize)
-        : SimpleArray()
     {
         ensureCapacity(initialSize);
         arraySize = 0;
@@ -38,7 +43,6 @@ public:
      * (regardless of allocated data by other object).
      */
     SimpleGrowingArray(const SimpleGrowingArray& other)
-        : SimpleArray()
     {
         ensureCapacity(other.arraySize);
         arraySize = other.arraySize;
@@ -108,10 +112,10 @@ public:
      */
     void clear() override
     {
-        if (maxSize > 0)
+        if (MaxSize > 0)
             delete [] array;
         array = nullptr;
-        maxSize = 0;
+        MaxSize = 0;
         arraySize = 0;
     }
 

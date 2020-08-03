@@ -52,4 +52,5 @@ bool test1()
     if (deepCopy[1] != 2)
         return false;
     
+    return true;
 }
