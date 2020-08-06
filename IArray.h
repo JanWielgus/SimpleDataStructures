@@ -2,7 +2,6 @@
  * @file IArray.h
  * @author Jan Wielgus
  * @brief Common interface for arrays
- * @version 0.1
  * @date 2020-08-03
  * 
  * @copyright Copyright (c) 2020
@@ -61,6 +60,12 @@ public:
      * @brief Overloaded array subscript operator.
      */
     virtual const T& operator[](size_t index) const = 0;
+
+    /**
+     * @brief Return pointer to the first element of the array or nullptr if array is empty.
+     * This object take care about releasing the allocated memory.
+     */
+    virtual T* toArray() = 0;
 
     /**
      * @brief Replace item at the specified index with another item.

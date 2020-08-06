@@ -117,7 +117,13 @@ public:
     }
 
 
-    bool replace(size_t index, const T& newItem) override
+    T* toArray() override
+    {
+        return array;
+    }
+
+
+    virtual bool replace(size_t index, const T& newItem) override
     {
         if (index >= arraySize)
             return false;
@@ -133,13 +139,13 @@ public:
     }
 
 
-    bool isFull() const override
+    virtual bool isFull() const override
     {
         return arraySize >= MaxSize;
     }
 
 
-    bool isEmpty() const override
+    virtual bool isEmpty() const override
     {
         return arraySize == 0;
     }

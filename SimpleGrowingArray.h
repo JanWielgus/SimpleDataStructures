@@ -107,6 +107,12 @@ public:
     }
 
 
+    void isFull() const override
+    {
+        return false;
+    }
+
+
     /**
      * @brief Remove all data and free the allocated memory.
      */
