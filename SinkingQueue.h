@@ -123,6 +123,26 @@ public:
     }
 
 
+    T& peek(size_t index) override
+    {
+        if (index >= queueLength)
+            return null_item;
+        
+        size_t returnIndex = (queueFrontIndex + index) % QueueSize;
+        return array[returnIndex];
+    }
+
+
+    const T& peek(size_t index) const override
+    {
+        if (index >= queueLength)
+            return null_item;
+        
+        size_t returnIndex = (queueFrontIndex + index) % QueueSize;
+        return array[returnIndex];
+    }
+
+
     bool isEmpty() const override
     {
         return queueLength == 0;
