@@ -16,12 +16,12 @@ template <class T>
 class SinkingQueue : public IQueue<T>
 {
 private:
-    const size_t QueueSize;
+    const size_t QueueSize; // size of the array
     T* array = nullptr;
     T null_item; // element returned when queue is empty and dequeue() is called
 
     size_t queueFrontIndex = 0; // element to be dequeued in the first place
-    size_t queueLength = 0;
+    size_t queueLength = 0; // amount of elements in the queue
 
 
 public:
@@ -75,6 +75,9 @@ public:
 
     bool enqueue(const T& item) override
     {
+        if (QueueSize == 0)
+            return false;
+
         // queueEndIndex is index to put the new item
         size_t queueEndIndex = (queueFrontIndex + queueLength) % QueueSize;
         array[queueEndIndex] = item;
@@ -88,6 +91,8 @@ public:
         }
         else // queue is not full
             queueLength++;
+        
+        return true;
     }
 
 
@@ -115,6 +120,26 @@ public:
     const T& peek() const override
     {
         return isEmpty() ? null_item : array[queueFrontIndex];
+    }
+
+
+    T& peek(size_t index) override
+    {
+        if (index >= queueLength)
+            return null_item;
+        
+        size_t returnIndex = (queueFrontIndex + index) % QueueSize;
+        return array[returnIndex];
+    }
+
+
+    const T& peek(size_t index) const override
+    {
+        if (index >= queueLength)
+            return null_item;
+        
+        size_t returnIndex = (queueFrontIndex + index) % QueueSize;
+        return array[returnIndex];
     }
 
 

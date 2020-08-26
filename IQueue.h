@@ -38,18 +38,38 @@ public:
     virtual T& dequeue() = 0;
 
     /**
-     * @brief Returns item from the queue beginning without removing it.
+     * @brief Returns reference to the first element in the queue
+     * without removing it.
      * 
-     * @return Referenve to the first element in the queue.
+     * @return Reference to the first element in the queue.
      */
     virtual T& peek() = 0;
 
     /**
-     * @brief Returns item from the queue beginning without removing it.
+     * @brief Returns const reference to the first element in the queue
+     * without removing it.
      * 
-     * @return Const referenve to the first element in the queue.
+     * @return Const reference to the first element in the queue.
      */
     virtual const T& peek() const = 0;
+
+    /**
+     * @brief Returns reference to the specific element in the queue
+     * without removing it.
+     * 
+     * @param index Number of the element to peek (0 is the first element)
+     * @return Reference to the element on the index position.
+     */
+    virtual T& peek(size_t index) = 0;
+
+    /**
+     * @brief Returns const reference to the specific element in the queue
+     * without removing it.
+     * 
+     * @param index Number of the element to peek (0 is the first element)
+     * @return Reference const to the element on the index position.
+     */
+    virtual const T& peek(size_t index) const = 0;
 
     /**
      * @brief Checks if queue is empty.
