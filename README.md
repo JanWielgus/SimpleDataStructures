@@ -1,2 +1,2 @@
-# FC_DataStructures
-Data structures that are used in the Flight Controller program
+# DataStructures
+Data structures that are mainly used in the Flight Controller program
