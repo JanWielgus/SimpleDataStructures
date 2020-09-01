@@ -54,24 +54,6 @@ public:
     virtual const T& peek() const = 0;
 
     /**
-     * @brief Returns reference to the specific element in the queue
-     * without removing it.
-     * 
-     * @param index Number of the element to peek (0 is the first element)
-     * @return Reference to the element on the index position.
-     */
-    virtual T& peek(size_t index) = 0;
-
-    /**
-     * @brief Returns const reference to the specific element in the queue
-     * without removing it.
-     * 
-     * @param index Number of the element to peek (0 is the first element)
-     * @return Reference const to the element on the index position.
-     */
-    virtual const T& peek(size_t index) const = 0;
-
-    /**
      * @brief Checks if queue is empty.
      * 
      * @return true if queue is empty
