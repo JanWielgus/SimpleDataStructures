@@ -41,6 +41,16 @@ public:
     virtual bool add(const T& item, size_t index) = 0;
 
     /**
+     * @brief Removes element from the specified index.
+     * 
+     * @param index Index of the element to remove.
+     * @return false if element was not deleted (eg. index is out of range
+     * or class don't support removing elements).
+     * Returns true otherwise.
+     */
+    virtual bool remove(size_t index) = 0;
+
+    /**
      * @brief Returns item at the specified index.
      * 
      * @param index Index of the item to be returned
