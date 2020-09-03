@@ -66,7 +66,7 @@ public:
 
 
     // overloaded assignment operator
-    SimpleArray& operator=(const SimpleArray& other) = delete; // temporary deleted //TODO: this
+    SimpleArray& operator=(const SimpleArray& other) = delete; // TODO: think if this should be deleted
 
 
     virtual bool add(const T& item) override
@@ -75,6 +75,7 @@ public:
             return false;
         
         array[arraySize] = item;
+        arraySize++;
         return true;
     }
 
@@ -89,7 +90,14 @@ public:
             array[i] = array[i-1];
         
         array[index] = item;
+        arraySize++;
         return true;
+    }
+
+
+    virtual bool remove(size_t index) override
+    {
+        return false; // TODO: implement remove method
     }
 
 
