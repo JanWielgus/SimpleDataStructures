@@ -21,7 +21,12 @@ private:
 
 
 public:
-    // constructor/constructors
+    LinkedList()
+    {
+
+    }
+
+    // other constructors if needed
 
 
     void clear() override
