@@ -1,5 +1,5 @@
 /**
- * @file SimpleGrowingArray.h
+ * @file GrowingArray.h
  * @author Jan Wielgus
  * @brief Array without fixed size.
  * Size is increased by one every time when full and new element is added.
@@ -7,8 +7,8 @@
  * 
  */
 
-#ifndef SIMPLEGROWINGARRAY_H
-#define SIMPLEGROWINGARRAY_H
+#ifndef GROWINGARRAY_H
+#define GROWINGARRAY_H
 
 #include <Array.h>
 

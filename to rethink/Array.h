@@ -1,13 +1,13 @@
 /**
- * @file SimpleArray.h
+ * @file Array.h
  * @author Jan Wielgus
- * @brief Implementation of simple C++ library for IArray interface.
+ * @brief Implementation of C++ library for IArray interface.
  * @date 2020-08-03
  * 
  */
 
-#ifndef SIMPLEARRAY_H
-#define SIMPLEARRAY_H
+#ifndef ARRAY_H
+#define ARRAY_H
 
 #include <IArray.h>
 
