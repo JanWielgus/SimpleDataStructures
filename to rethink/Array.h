@@ -1,19 +1,19 @@
 /**
- * @file SimpleArray.h
+ * @file Array.h
  * @author Jan Wielgus
- * @brief Implementation of simple C++ library for IArray interface.
+ * @brief Implementation of C++ library for IArray interface.
  * @date 2020-08-03
  * 
  */
 
-#ifndef SIMPLEARRAY_H
-#define SIMPLEARRAY_H
+#ifndef ARRAY_H
+#define ARRAY_H
 
 #include <IArray.h>
 
 
 template <class T>
-class SimpleArray : public IArray<T>
+class Array : public IArray<T>
 {
 protected:
     T* array = nullptr;
@@ -23,7 +23,7 @@ protected:
 
 
     // protected constructor for classes that derive from this class
-    SimpleArray()
+    Array()
     {
         array = nullptr;
         MaxSize = 0;
@@ -32,7 +32,7 @@ protected:
 
 
 public:
-    SimpleArray(size_t arrayMaxSize)
+    Array(size_t arrayMaxSize)
         : MaxSize(arrayMaxSize)
     {
         if (MaxSize > 0)
@@ -42,7 +42,7 @@ public:
 
 
     // copy constructor
-    SimpleArray(const SimpleArray& other)
+    Array(const SimpleArray& other)
         : MaxSize(other.MaxSize)
     {
         arraySize = other.arraySize;
@@ -58,7 +58,7 @@ public:
     }
 
 
-    virtual ~SimpleArray()
+    virtual ~Array()
     {
         if (MaxSize > 0)
             delete [] array;
@@ -66,7 +66,7 @@ public:
 
 
     // overloaded assignment operator
-    SimpleArray& operator=(const SimpleArray& other) = delete; // TODO: think if this should be deleted
+    Array& operator=(const Array& other) = delete; // TODO: think if this should be deleted
 
 
     virtual bool add(const T& item) override

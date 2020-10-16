@@ -1,5 +1,5 @@
 /**
- * @file SimpleGrowingArray.h
+ * @file GrowingArray.h
  * @author Jan Wielgus
  * @brief Array without fixed size.
  * Size is increased by one every time when full and new element is added.
@@ -7,29 +7,29 @@
  * 
  */
 
-#ifndef SIMPLEGROWINGARRAY_H
-#define SIMPLEGROWINGARRAY_H
+#ifndef GROWINGARRAY_H
+#define GROWINGARRAY_H
 
-#include <SimpleArray.h>
+#include <Array.h>
 
 
 template <class T>
-class SimpleGrowingArray : public SimpleArray<T>
+class GrowingArray : public Array<T>
 {
 private:
-    using SimpleArray<T>::array;
-    using SimpleArray<T>::MaxSize;
-    using SimpleArray<T>::arraySize;
-    using SimpleArray<T>::null_item;
+    using Array<T>::array;
+    using Array<T>::MaxSize;
+    using Array<T>::arraySize;
+    using Array<T>::null_item;
 
 
 public:
-    SimpleGrowingArray()
+    GrowingArray()
     {
     }
 
 
-    SimpleGrowingArray(size_t initialSize)
+    GrowingArray(size_t initialSize)
     {
         ensureCapacity(initialSize);
         arraySize = 0;
@@ -42,7 +42,7 @@ public:
      * Size of the new object array is only the amount of data in other object array
      * (regardless of allocated data by other object).
      */
-    SimpleGrowingArray(const SimpleGrowingArray& other)
+    GrowingArray(const GrowingArray& other)
     {
         ensureCapacity(other.arraySize);
         arraySize = other.arraySize;
@@ -53,7 +53,7 @@ public:
     }
 
 
-    virtual ~SimpleGrowingArray() {}
+    virtual ~GrowingArray() {}
 
 
     /**
@@ -61,9 +61,9 @@ public:
      * Size of the new array is only the amount of data inside the copied array.
      * 
      * @param other 
-     * @return SimpleGrowingArray& 
+     * @return GrowingArray& 
      */
-    SimpleGrowingArray& operator=(const SimpleGrowingArray& other)
+    GrowingArray& operator=(const GrowingArray& other)
     {
         if (this != &other)
         {
