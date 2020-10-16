@@ -1,19 +1,19 @@
 /**
- * @file SimpleQueue.h
+ * @file Queue.h
  * @author Jan Wielgus
- * @brief Simple queue that implement IQueue interface.
+ * @brief Queue that implement IQueue interface.
  * @date 2020-08-31
  * 
  */
 
-#ifndef SIMPLEQUEUE_H
-#define SIMPLEQUEUE_H
+#ifndef QUEUE_H
+#define QUEUE_H
 
 #include "IQueue.h"
 
 
 template <class T>
-class SimpleQueue : public IQueue<T>
+class Queue : public IQueue<T>
 {
 protected:
     const size_t QueueSize; // size of the array
@@ -25,7 +25,7 @@ protected:
 
 
 public:
-    SimpleQueue(size_t queueSize)
+    Queue(size_t queueSize)
         : QueueSize(queueSize)
     {
         if (QueueSize > 0)
@@ -35,7 +35,7 @@ public:
     }
 
 
-    SimpleQueue(const SimpleQueue& other)
+    Queue(const SimpleQueue& other)
         : QueueSize(other.QueueSize)
     {
         queueFrontIndex = other.queueFrontIndex;
@@ -54,14 +54,14 @@ public:
     }
 
 
-    virtual ~SimpleQueue()
+    virtual ~Queue()
     {
         if (QueueSize > 0)
             delete[] array;
     }
 
 
-    SimpleQueue& operator=(const SimpleQueue& other) = delete;
+    Queue& operator=(const SimpleQueue& other) = delete;
 
 
     void clear() override 

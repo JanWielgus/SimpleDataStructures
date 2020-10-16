@@ -9,18 +9,18 @@
 #ifndef SINKINGQUEUE_H
 #define SINKINGQUEUE_H
 
-#include "SimpleQueue.h"
+#include "Queue.h"
 
 
 template <class T>
-class SinkingQueue : public SimpleQueue<T>
+class SinkingQueue : public Queue<T>
 {
 protected:
-    using SimpleQueue<T>::QueueSize;
-    using SimpleQueue<T>::array;
-    using SimpleQueue<T>::null_item;
-    using SimpleQueue<T>::queueFrontIndex;
-    using SimpleQueue<T>::queueLength;
+    using Queue<T>::QueueSize;
+    using Queue<T>::array;
+    using Queue<T>::null_item;
+    using Queue<T>::queueFrontIndex;
+    using Queue<T>::queueLength;
 
 
 public:
