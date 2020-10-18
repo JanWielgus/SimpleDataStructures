@@ -1,48 +1,48 @@
 /**
- * @file SinkingQueue.h
+ * @file StaticSinkingQueue.h
  * @author Jan Wielgus
  * @brief Queue that when is full, remove the oldest element.
  * @date 2020-08-03
  * 
  */
 
-#ifndef SINKINGQUEUE_H
-#define SINKINGQUEUE_H
+#ifndef STATICSINKINGQUEUE_H
+#define STATICSINKINGQUEUE_H
 
-#include "Queue.h"
+#include "StaticQueue.h"
 
 
 template <class T>
-class SinkingQueue : public Queue<T>
+class StaticSinkingQueue : public StaticQueue<T>
 {
 protected:
-    using Queue<T>::QueueSize;
-    using Queue<T>::array;
-    using Queue<T>::null_item;
-    using Queue<T>::queueFrontIndex;
-    using Queue<T>::queueLength;
+    using StaticQueue<T>::QueueSize;
+    using StaticQueue<T>::array;
+    using StaticQueue<T>::null_item;
+    using StaticQueue<T>::queueFrontIndex;
+    using StaticQueue<T>::queueLength;
 
 
 public:
-    SinkingQueue(size_t queueSize)
+    StaticSinkingQueue(size_t queueSize)
         : SimpleQueue(queueSize)
     {
     }
 
 
-    SinkingQueue(const SinkingQueue& other)
-        : SimpleQueue(queueSize)
+    StaticSinkingQueue(const StaticSinkingQueue& other)
+        : SimpleQueue(other)
     {
     }
 
 
-    ~SinkingQueue()
+    ~StaticSinkingQueue()
     {
     }
 
 
     // overloaded assignment operator
-    SinkingQueue& operator=(const SinkingQueue& other) = delete; // temporarily deleted //TODO: this
+    StaticSinkingQueue& operator=(const StaticSinkingQueue& other) = delete;
 
 
     bool enqueue(const T& item) override

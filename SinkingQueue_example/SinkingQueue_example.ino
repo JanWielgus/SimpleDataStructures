@@ -4,7 +4,7 @@
     Author:     Jan Wielgus
 */
 
-#include <SinkingQueue.h>
+#include <StaticSinkingQueue.h>
 
 int test1();
 
@@ -26,7 +26,7 @@ void loop()
 
 int test1()
 {
-    SinkingQueue<uint16_t> testQueue(5);
+    StaticSinkingQueue<uint16_t> testQueue(5);
 
     testQueue.enqueue(1);
     testQueue.enqueue(123);

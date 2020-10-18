@@ -1,19 +1,20 @@
 /**
- * @file Queue.h
+ * @file StaticQueue.h
  * @author Jan Wielgus
  * @brief Queue that implement IQueue interface.
+ * Queue size is provided in constructor and memory is allocated statically.
  * @date 2020-08-31
  * 
  */
 
-#ifndef QUEUE_H
-#define QUEUE_H
+#ifndef STATICQUEUE_H
+#define STATICQUEUE_H
 
 #include "IQueue.h"
 
 
 template <class T>
-class Queue : public IQueue<T>
+class StaticQueue : public IQueue<T>
 {
 protected:
     const size_t QueueSize; // size of the array
@@ -25,7 +26,7 @@ protected:
 
 
 public:
-    Queue(size_t queueSize)
+    StaticQueue(size_t queueSize)
         : QueueSize(queueSize)
     {
         if (QueueSize > 0)
@@ -35,7 +36,7 @@ public:
     }
 
 
-    Queue(const SimpleQueue& other)
+    StaticQueue(const StaticQueue& other)
         : QueueSize(other.QueueSize)
     {
         queueFrontIndex = other.queueFrontIndex;
@@ -54,14 +55,14 @@ public:
     }
 
 
-    virtual ~Queue()
+    virtual ~StaticQueue()
     {
         if (QueueSize > 0)
             delete[] array;
     }
 
 
-    Queue& operator=(const SimpleQueue& other) = delete;
+    StaticQueue& operator=(const StaticQueue& other) = delete;
 
 
     void clear() override 
@@ -79,9 +80,8 @@ public:
         if (queueLength == QueueSize)
             return false;
         
-        // queueEndIndex is index to put the new item
-        size_t queueEndIndex = (queueFrontIndex + queueLength) % QueueSize;
-        array[queueEndIndex] = item;
+        size_t newItemIndex = (queueFrontIndex + queueLength) % QueueSize;
+        array[newItemIndex] = item;
         queueLength++;
         return true;
     }
