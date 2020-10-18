@@ -42,7 +42,7 @@ private:
     T nullElement;
 
 public:
-    virtual ~LinkedListIterator() {}
+    LinkedListIterator(const LinkedListIterator& other) = delete; // do not allow copying this class
 
     /**
      * @return true if iterator is not at the end and next() method can be used.
@@ -61,9 +61,9 @@ public:
     {
         if (currentNode != nullptr)
         {
-            T& toReturn = currentNode->data;
+            T& elementToReturn = currentNode->data;
             currentNode = currentNode->next;
-            return toReturn;
+            return elementToReturn;
         }
         return nullElement;
     }
@@ -80,7 +80,7 @@ private:
     Node<T>* root = nullptr;
     Node<T>* tail = nullptr;
     size_t size = 0;
-    LinkedListIterator<T> iteratorInstance;
+    LinkedListIterator<T> iteratorInstance; // if code don't compile because of this line, create default constructor for iterator class
 
     T nullElement; // element returned for example when used get on empty list
 
@@ -88,22 +88,6 @@ private:
 public:
     LinkedList()
     {
-    }
-
-
-    void clear() override
-    {
-        Node<T>* current = root;
-        while (current != nullptr)
-        {
-            Node<T>* next = current->next;
-            delete current;
-            current = next;
-        }
-        root = nullptr;
-        tail = nullptr;
-        size = 0;
-        iteratorInstance.currentNode = nullptr;
     }
 
 
@@ -207,6 +191,25 @@ public:
     {
         return root == nullptr;
     }
+
+
+    void clear() override
+    {
+        Node<T>* current = root;
+        while (current != nullptr)
+        {
+            Node<T>* next = current->next;
+            delete current;
+            current = next;
+        }
+        root = nullptr;
+        tail = nullptr;
+        size = 0;
+        iteratorInstance.currentNode = nullptr;
+    }
+
+
+
 
 
     /**

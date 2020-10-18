@@ -19,11 +19,6 @@ public:
     virtual ~IList() {}
 
     /**
-     * @brief Removes all objects from the array.
-     */
-    virtual void clear() = 0;
-
-    /**
      * @brief Adds new item to the array.
      * @param item Reference to item to be added to the array
      * @return false if item was not added (for example because list is full)
@@ -75,6 +70,7 @@ public:
      * @return Return pointer to the iterator set to the first element.
      * You mustn't delete this pointer.
      * Always return the same pointer but each time reset the iterator.
+     * Use this pointer, don't copy the instance.
      */
     virtual Iterator<T>* getIterator() = 0;
 
@@ -97,6 +93,11 @@ public:
      * @return true if array is empty
      */
     virtual bool isEmpty() const = 0;
+
+    /**
+     * @brief Removes all objects from the array.
+     */
+    virtual void clear() = 0;
 };
 
 
