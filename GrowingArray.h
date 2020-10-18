@@ -10,22 +10,67 @@
 #ifndef GROWINGARRAY_H
 #define GROWINGARRAY_H
 
-#include <Array.h>
+#include <IArray.h>
 
 
 template <class T>
-class GrowingArray : public Array<T>
+class GrowingArray;
+
+
+template <class T>
+class GrowingArrayIterator : public Iterator<T>
 {
 private:
-    using Array<T>::array;
-    using Array<T>::MaxSize;
-    using Array<T>::arraySize;
-    using Array<T>::null_item;
+    T* currentElement = nullptr;
+    size_t remainingElements = 0;
+    T nullElement; // element returned when called next() when any elements were available
+
+public:
+    GrowingArrayIterator(const GrowingArrayIterator& other) = delete;
+
+    bool hasNext() override
+    {
+        if (remainingElements == 0)
+            return false;
+        return true;
+    }
+
+
+    T& next() override
+    {
+        if (remainingElements == 0)
+            return nullElement;
+        else
+        {
+            T& elementToReturn = *currentElement;
+            currentElement++;
+            remainingElements--;
+            return elementToReturn;
+        }
+    }
+
+    friend class GrowingArray<T>;
+};
+
+
+
+template <class T>
+class GrowingArray : public IArray<T>
+{
+private:
+    T* array = nullptr;
+    size_t MaxSize;
+    size_t arraySize = 0; // amt of elements in the array
+    T null_item; // returned when provided index is out of bounds
+    GrowingArrayIterator<T> iteratorInstance; // if code don't compile because of this line, create default constructor for iterator class
 
 
 public:
     GrowingArray()
     {
+        array = nullptr;
+        MaxSize = 0;
+        arraySize = 0;
     }
 
 
@@ -53,7 +98,11 @@ public:
     }
 
 
-    virtual ~GrowingArray() {}
+    ~GrowingArray()
+    {
+        if (MaxSize > 0)
+            delete [] array;
+    }
 
 
     /**
@@ -78,6 +127,8 @@ public:
             for (size_t i = 0; i < arraySize; i++)
                 array[i] = other.array[i];
         }
+
+        resetIterator();
 
         return *this;
     }
@@ -107,9 +158,76 @@ public:
     }
 
 
+    bool remove(size_t index) override
+    {
+        resetIterator();
+        return false; // TODO: implement remove() method
+    }
+
+
+    T& get(size_t index) override
+    {
+        return index < arraySize ? array[index] : null_item;
+    }
+
+
+    const T& get(size_t index) const override
+    {
+        return index < arraySize ? array[index] : null_item;
+    }
+
+
+    T& operator[](size_t index) override
+    {
+        return get(index);
+    }
+
+
+    const T& operator[](size_t index) const override
+    {
+        return get(index);
+    }
+
+
+    T* toArray() override
+    {
+        return array;
+    }
+
+
+    Iterator<T>* getIterator() override
+    {
+        iteratorInstance.currentElement = array;
+        iteratorInstance.remainingElements = arraySize;
+        return &iteratorInstance;
+    }
+
+
+    bool replace(const T& newItem, size_t index) override
+    {
+        if (index >= arraySize)
+            return false;
+        
+        array[index] = newItem;
+        return true;
+    }
+
+
+    size_t getSize() const override
+    {
+        return arraySize;
+    }
+
+
     void isFull() const override
     {
         return false;
+    }
+
+
+    bool isEmpty() const override
+    {
+        return arraySize == 0;
     }
 
 
@@ -123,7 +241,12 @@ public:
         array = nullptr;
         MaxSize = 0;
         arraySize = 0;
+        resetIterator();
     }
+
+
+
+
 
 
     /**
@@ -150,6 +273,20 @@ public:
         }
 
         MaxSize = minimumSize;
+
+        resetIterator();
+    }
+
+
+
+private:
+    /**
+     * @brief Makes that next call of hasNext() method of iterator will return false.
+     * This method is used after any modifications to outdate the iterator.
+     */
+    void resetIterator()
+    {
+        iteratorInstance.remainingElements = 0;
     }
 };
 
