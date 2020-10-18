@@ -2,7 +2,7 @@
  * @file GrowingArray.h
  * @author Jan Wielgus
  * @brief Array without fixed size.
- * Size is increased by one every time when full and new element is added.
+ * Size is increased (by one) every time when full and new element is added and size is not sufficient.
  * @date 2020-08-03
  * 
  */
