@@ -160,8 +160,16 @@ public:
 
     bool remove(size_t index) override
     {
-        resetIterator();
-        return false; // TODO: implement remove() method
+        if (index >= arraySize)
+            return false;
+        
+        for (size_t i = index + 1; i < arraySize; i++)
+            array[i - 1] = array[i];
+        
+        arraySize--;
+        resetIterator(); // probably could be replaced with just decreasing remainingElements in iterator instance
+        return true;
+        // TODO: add decreasing size of the allocated space
     }
 
 
