@@ -1,14 +1,9 @@
-// TODO: IMPORTANT THING: virtual methods are slower, but not when I have virtual in interface class and non-virtual methods in concrete classes. So don't use virtual in concrete classes, in abstract is OK.
-
-
-// TODO: Probably remove both Array and GrowingArray because they are useless
-
-// TODO: Probably remove Data Structures repository from github and move files that will be used by the drone code directly to it.
-
+// XXX: IMPORTANT THING: virtual methods are slower, but not when I have virtual in interface class and non-virtual methods in concrete classes. So don't use virtual in concrete classes, in abstract is OK.
 
 #include <iostream>
 #include <cstdlib>
 #include "LinkedList.h"
+#include "GrowingArray.h"
 
 using namespace std;
 
@@ -18,14 +13,17 @@ template <class T>
 void assertEquals(T expected, T actual)
 {
     if (expected != actual)
+    {
+        cout << "TEST NUMBER " << assertionNumber << " FAILED" << endl;
         exit(-assertionNumber);
+    }
     assertionNumber++;
 }
 
 template <class T>
-void showListUsingIterator(IList<T>* list)
+void showListUsingIterator(IList<T>& list)
 {
-    Iterator<T>* iter = list->getIterator();
+    Iterator<T>* iter = list.getIterator();
     int counter = 0;
     while (iter->hasNext())
         cout << counter++ << ". " << iter->next() << endl;;
@@ -36,6 +34,7 @@ void showListUsingIterator(IList<T>* list)
 int main()
 {
     LinkedList<int> testList;
+    //GrowingArray<int> testList; // you can also test GrowingArray
 
     cout << "Testing linked list" << endl;
     cout << "Negative exit code indicate failure of any test" << endl;
@@ -61,7 +60,7 @@ int main()
     assertEquals<size_t>(5, testList.getSize());
 
     cout << endl;
-    showListUsingIterator(&testList);
+    showListUsingIterator(testList);
 
     cout << endl;
     for (int i = 0; i < testList.getSize(); i++)
@@ -85,12 +84,12 @@ int main()
     assertEquals(false, testList.remove(3));
 
     cout << endl;
-    showListUsingIterator(&testList);
+    showListUsingIterator(testList);
 
     testList.remove(1);
 
     cout << endl;
-    showListUsingIterator(&testList);
+    showListUsingIterator(testList);
 
     cout << "SUCCESS, end of testing" << endl;
 

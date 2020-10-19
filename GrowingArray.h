@@ -10,7 +10,7 @@
 #ifndef GROWINGARRAY_H
 #define GROWINGARRAY_H
 
-#include <IArray.h>
+#include "IArray.h"
 
 
 template <class T>
@@ -26,6 +26,7 @@ private:
     T nullElement; // element returned when called next() when any elements were available
 
 public:
+    GrowingArrayIterator() {}
     GrowingArrayIterator(const GrowingArrayIterator& other) = delete;
 
     bool hasNext() override
@@ -62,7 +63,7 @@ private:
     size_t MaxSize;
     size_t arraySize = 0; // amt of elements in the array
     T null_item; // returned when provided index is out of bounds
-    GrowingArrayIterator<T> iteratorInstance; // if code don't compile because of this line, create default constructor for iterator class
+    GrowingArrayIterator<T> iteratorInstance;
 
 
 public:
@@ -147,6 +148,10 @@ public:
 
     bool add(const T& item, size_t index) override
     {
+        // prevent from making unassigned gap
+        if (index > arraySize)
+            return false;
+
         ensureCapacity(arraySize + 1);
 
         // Make place for a new item
@@ -154,6 +159,7 @@ public:
             array[i] = array[i-1];
 
         array[index] = item;
+        arraySize++;
         return true;
     }
 
@@ -227,7 +233,7 @@ public:
     }
 
 
-    void isFull() const override
+    bool isFull() const override
     {
         return false;
     }

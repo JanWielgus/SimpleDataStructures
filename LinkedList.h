@@ -42,6 +42,7 @@ private:
     T nullElement;
 
 public:
+    LinkedListIterator() {}
     LinkedListIterator(const LinkedListIterator& other) = delete; // do not allow copying this class
 
     /**
@@ -80,7 +81,7 @@ private:
     Node<T>* root = nullptr;
     Node<T>* tail = nullptr;
     size_t size = 0;
-    LinkedListIterator<T> iteratorInstance; // if code don't compile because of this line, create default constructor for iterator class
+    LinkedListIterator<T> iteratorInstance;
 
     T nullElement; // element returned for example when used get on empty list
 
