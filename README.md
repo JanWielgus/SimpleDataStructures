@@ -5,3 +5,4 @@ The goal for this library is also to be scalable, so I used base abstract classe
 
 Currently tested data structures are:
 * LinkedList
+* GrowingArray
