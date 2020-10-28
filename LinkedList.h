@@ -26,16 +26,13 @@ class Node
 {
 public:
     T data;
-    Node<T>* next;
-
-    Node() : next(nullptr)
-    {}
+    Node<T>* next = nullptr;
 };
 
 
 
 template <class T>
-class LinkedListIterator : public Iterator<T>
+class LinkedListIterator : public RemovingIterator<T>
 {
 private:
     Node<T>* currentNode = nullptr;
@@ -44,6 +41,7 @@ private:
 public:
     LinkedListIterator() {}
     LinkedListIterator(const LinkedListIterator& other) = delete; // do not allow copying this class
+    LinkedListIterator& operator=(const LinkedListIterator& other) = delete;
 
     /**
      * @return true if iterator is not at the end and next() method can be used.
@@ -68,6 +66,17 @@ public:
         }
         return nullElement;
     }
+
+    bool remove() override
+    {
+    }
+
+
+    /**
+     * @brief Sets the iterator to the linked list beginning (if is empty, thats ok).
+     */
+    void reset();
+
 
     friend class LinkedList<T>;
 };
@@ -134,6 +143,8 @@ public:
         return returnFlag;
     }
 
+    }
+
     
     T& get(size_t index) override
     {
@@ -165,7 +176,7 @@ public:
 
     Iterator<T>* getIterator() override
     {
-        iteratorInstance.currentNode = root;
+        iteratorInstance.reset();
         return &iteratorInstance;
     }
 
@@ -206,7 +217,7 @@ public:
         root = nullptr;
         tail = nullptr;
         size = 0;
-        iteratorInstance.currentNode = nullptr;
+        iteratorInstance.reset();
     }
 
 
@@ -265,5 +276,17 @@ private:
         return lookedFor;
     }
 };
+
+
+
+
+
+
+template <class T>
+void LinkedListIterator<T>::reset()
+{
+    currentNode = linkedList->root;
+}
+
 
 #endif

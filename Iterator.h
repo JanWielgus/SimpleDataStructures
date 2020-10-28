@@ -30,4 +30,22 @@ public:
 };
 
 
+/**
+ * @brief Iterator that enables removing elements while going through the colletion.
+ */
+template <class T>
+class RemovingIterator : public Iterator<T>
+{
+public:
+    virtual ~RemovingIterator() {}
+
+    /**
+     * @brief Removes the last element returned by next() method.
+     * Can't be used before the first call of next().
+     * @return false if element was not removed (eg. last next() call was incorrect)
+     */
+    virtual bool remove() = 0;
+};
+
+
 #endif
