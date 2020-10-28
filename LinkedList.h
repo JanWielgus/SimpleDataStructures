@@ -35,11 +35,17 @@ template <class T>
 class LinkedListIterator : public RemovingIterator<T>
 {
 private:
-    Node<T>* currentNode = nullptr;
+    Node<T>* currentNode;
+    LinkedList<T>* linkedList; // LinkedList instance pointer for for this iterator (have to be because of remove())
     T nullElement;
 
 public:
-    LinkedListIterator() {}
+    /**
+     * @brief Construct the linked list iterator for specified linked list.
+     * @param linkedList pointer to the linked list 
+     */
+    explicit LinkedListIterator(LinkedList<T>* linkedList);
+
     LinkedListIterator(const LinkedListIterator& other) = delete; // do not allow copying this class
     LinkedListIterator& operator=(const LinkedListIterator& other) = delete;
 
@@ -90,7 +96,7 @@ private:
     Node<T>* root = nullptr;
     Node<T>* tail = nullptr;
     size_t size = 0;
-    LinkedListIterator<T> iteratorInstance;
+    LinkedListIterator<T> iteratorInstance(this);
 
     T nullElement; // element returned for example when used get on empty list
 
@@ -143,6 +149,44 @@ public:
         return returnFlag;
     }
 
+
+    /**
+     * @brief Remove element at specified index.
+     * The fastest is removing the first element, slowest is removing the last one.
+     * 
+     * @param index Index of element to be removed from the linked list.
+     * @return true if element was removed. Return false if list is empty
+     * or index is out of bounds.
+     */
+    bool remove(size_t index) override
+    {
+        if (root == nullptr || index >= size)
+            return false;
+        
+        Node<T>* toDelete;
+
+        if (index == 0)
+        {
+            toDelete = root;
+            root = root->next;
+
+            if (root == nullptr)
+                tail = nullptr;
+        }
+        else
+        {
+            Node<T>* preceding = getNode(index - 1);
+            toDelete = preceding->next;
+            preceding->next = toDelete->next;
+
+            if (toDelete->next == nullptr) // if this was a tail node
+                tail = preceding;
+        }
+        
+        delete toDelete;
+        size--;
+        iteratorInstance.reset();
+        return true;
     }
 
     
@@ -223,41 +267,44 @@ public:
 
 
 
-
-    /**
-     * @brief Remove element at specified index.
-     * The fastest is removing the first element, slowest is removing the last one.
-     * 
-     * @param index Index of element to be removed from the linked list.
-     * @return true if element was removed. Return false if list is empty
-     * or index is out of bounds.
-     */
-    bool remove(size_t index)
+    RemovingIterator<T>* getRemovingIterator()
     {
-        if (root == nullptr || index >= size)
+        iteratorInstance.reset();
+        return &iteratorInstance;
+    }
+
+
+    // TODO: check two remove and one getNode methods and try to simplify by merging / modifying them
+    bool remove(const Node<T>* nodeToRemove)
+    {
+        if (root == nullptr || nodeToRemove == nullptr)
             return false;
         
-        if (index == 0)
+        if (nodeToRemove == root)
         {
-            Node<T>* toDelete = root;
             root = root->next;
-            delete toDelete;
+            
+            if (root == nullptr)
+                tail = nullptr;
         }
         else
         {
-            Node<T>* preceding = getNode(index - 1);
-            Node<T>* toDelete = preceding->next;
-            preceding->next = toDelete->next;
+            Node<T>* precedingNode = getPrecedingNode(nodeToRemove);
+            if (precedingNode == nullptr) // node was not found
+                return false;
+            
+            precedingNode->next = nodeToRemove->next;
 
-            if (toDelete->next == nullptr)
-                tail = preceding;
-
-            delete toDelete;
+            if (nodeToRemove->next == nullptr) // if this was a tail node
+                tail = precedingNode;
         }
         
+        delete nodeToRemove;
         size--;
+        iteratorInstance.reset();
         return true;
     }
+
 
 
 private:
@@ -275,11 +322,37 @@ private:
         
         return lookedFor;
     }
+
+
+    /**
+     * @brief Return node that is before the node passed in the parameter
+     * (or nullptr if passed root or preceding node was not found).
+     * @param node Node which predecessor we are looking for.
+     */
+    Node<T>* getPrecedingNode(Node<T>* node)
+    {
+        if (node == root)
+            return nullptr;
+
+        Node<T>* precedingNode = root;
+        while (precedingNode != nullptr && precedingNode->next != node)
+            precedingNode = precedingNode->next;
+        
+        return precedingNode;
+    }
 };
 
 
 
 
+
+
+template <class T>
+LinkedListIterator<T>::LinkedListIterator(LinkedList<T>* linkedList)
+{
+    this->linkedList = linkedList;
+    reset();
+}
 
 
 template <class T>
