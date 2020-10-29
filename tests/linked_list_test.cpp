@@ -149,7 +149,6 @@ void removingUsingIteratorTest()
     assertEquals(8, removIter->next());
     assertEquals(9, removIter->next());
     assertEquals(false, removIter->hasNext());
-    assertEquals(false, removIter->remove());
 
 
     assertEquals(5, testList.get(0));
