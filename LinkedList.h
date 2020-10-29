@@ -135,7 +135,6 @@ public:
 
     bool add(const T& item) override
     {
-        LinkedListIterator<T> iteratorInstance(this);
         if (root == nullptr)
         {
             root = new Node<T>();
