@@ -20,6 +20,11 @@ void assertEquals(T expected, T actual)
     assertionNumber++;
 }
 
+void resetAssertionCounter()
+{
+    assertionNumber = 1;
+}
+
 template <class T>
 void showListUsingIterator(IList<T>& list)
 {
@@ -30,16 +35,40 @@ void showListUsingIterator(IList<T>& list)
 }
 
 
+void firstListTest();
+void removingUsingIteratorTest();
+
+
 
 int main()
 {
-    LinkedList<int> testList;
-    //GrowingArray<int> testList; // you can also test GrowingArray
-
     cout << "Testing linked list" << endl;
     cout << "Negative exit code indicate failure of any test" << endl;
     cout << "Absolute value of that code is index of performed test" << endl;
     cout << endl;
+
+    
+    firstListTest();
+
+    removingUsingIteratorTest();
+
+
+    cout << "SUCCESS, end of testing" << endl;
+
+
+    return 0;
+}
+
+
+
+
+void firstListTest()
+{
+    cout << "First list test" << endl;
+    resetAssertionCounter();
+
+    LinkedList<int> testList;
+    //GrowingArray<int> testList; // you can also test GrowingArray
 
     assertEquals(true, testList.isEmpty());
     assertEquals<size_t>(0, testList.getSize());
@@ -91,8 +120,56 @@ int main()
     cout << endl;
     showListUsingIterator(testList);
 
-    cout << "SUCCESS, end of testing" << endl;
-
-
-    return 0;
+    cout << "passed" << endl;
 }
+
+
+
+void removingUsingIteratorTest()
+{
+    cout << "Removing using iterator test" << endl;
+    resetAssertionCounter();
+
+    LinkedList<int> testList;
+
+    testList.add(5);
+    testList.add(6);
+    testList.add(7);
+    testList.add(8);
+    testList.add(9);
+
+    RemovingIterator<int>* removIter = testList.getRemovingIterator();
+
+    assertEquals(5, removIter->next());
+    assertEquals(6, removIter->next());
+    assertEquals(true, removIter->remove());
+    assertEquals(false, removIter->remove());
+    assertEquals(7, removIter->next());
+    assertEquals(true, removIter->remove());
+    assertEquals(8, removIter->next());
+    assertEquals(9, removIter->next());
+    assertEquals(false, removIter->hasNext());
+    assertEquals(false, removIter->remove());
+
+
+    assertEquals(5, testList.get(0));
+    assertEquals(8, testList.get(1));
+    assertEquals(9, testList.get(2));
+
+    assertEquals(3, (int)testList.getSize());
+
+
+    Iterator<int>* iter = testList.getIterator();
+    assertEquals(5, iter->next());
+    assertEquals(8, iter->next());
+    assertEquals(9, iter->next());
+
+
+    removIter = testList.getRemovingIterator();
+    assertEquals(5, removIter->next());
+    assertEquals(8, removIter->next());
+    assertEquals(9, removIter->next());
+    
+    cout << "passed" << endl;
+}
+
