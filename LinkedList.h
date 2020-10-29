@@ -88,7 +88,7 @@ public:
         
         Node<T>* nextNodeBackup = currentNode->next;
             
-        linkedList->remove(currentNode);
+        linkedList->removeNode(currentNode);
 
         predecessorNode.next = nextNodeBackup;
         currentNode = &predecessorNode;
@@ -114,19 +114,23 @@ private:
     Node<T>* root = nullptr;
     Node<T>* tail = nullptr;
     size_t size = 0;
-    LinkedListIterator<T> iteratorInstance(this);
+    LinkedListIterator<T> iteratorInstance;
 
     T nullElement; // element returned for example when used get on empty list
+
+    friend class LinkedListIterator<T>;
 
 
 public:
     LinkedList()
+        : iteratorInstance(this)
     {
     }
 
 
     bool add(const T& item) override
     {
+        LinkedListIterator<T> iteratorInstance(this);
         if (root == nullptr)
         {
             root = new Node<T>();
@@ -292,38 +296,6 @@ public:
     }
 
 
-    // TODO: check two remove and one getNode methods and try to simplify by merging / modifying them
-    bool remove(const Node<T>* nodeToRemove)
-    {
-        if (root == nullptr || nodeToRemove == nullptr)
-            return false;
-        
-        if (nodeToRemove == root)
-        {
-            root = root->next;
-            
-            if (root == nullptr)
-                tail = nullptr;
-        }
-        else
-        {
-            Node<T>* precedingNode = getPrecedingNode(nodeToRemove);
-            if (precedingNode == nullptr) // node was not found
-                return false;
-            
-            precedingNode->next = nodeToRemove->next;
-
-            if (nodeToRemove->next == nullptr) // if this was a tail node
-                tail = precedingNode;
-        }
-        
-        delete nodeToRemove;
-        size--;
-        iteratorInstance.reset();
-        return true;
-    }
-
-
 
 private:
     Node<T>* getNode(size_t index) const
@@ -347,7 +319,7 @@ private:
      * (or nullptr if passed root or preceding node was not found).
      * @param node Node which predecessor we are looking for.
      */
-    Node<T>* getPrecedingNode(Node<T>* node)
+    Node<T>* getPrecedingNode(const Node<T>* node)
     {
         if (node == root)
             return nullptr;
@@ -361,7 +333,7 @@ private:
 
 
     // TODO: check two remove and one getNode methods and try to simplify by merging / modifying them
-    bool remove(const Node<T>* nodeToRemove)
+    bool removeNode(const Node<T>* nodeToRemove)
     {
         if (root == nullptr || nodeToRemove == nullptr)
             return false;
