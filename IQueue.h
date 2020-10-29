@@ -9,6 +9,10 @@
 #ifndef IQUEUE_H
 #define IQUEUE_H
 
+#ifdef ARDUINO
+    #include <arduino.h>
+#endif
+
 
 template <class T>
 class IQueue

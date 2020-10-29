@@ -11,6 +11,10 @@
 
 #include "Iterator.h"
 
+#ifdef ARDUINO
+    #include <arduino.h>
+#endif
+
 
 template <class T>
 class IList
