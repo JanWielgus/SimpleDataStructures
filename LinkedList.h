@@ -116,7 +116,7 @@ private:
     size_t size = 0;
     LinkedListIterator<T> iteratorInstance;
 
-    T nullElement; // element returned for example when used get on empty list
+    T nullElement; // element returned for example when used get() on empty list
 
     friend class LinkedListIterator<T>;
 
@@ -126,6 +126,11 @@ public:
         : iteratorInstance(this)
     {
     }
+
+
+    // TODO: implement copy constructor and assignment operator
+    LinkedList(const LinkedList& other) = delete;
+    LinkedList& operator=(const LinkedList& other) = delete;
 
 
     bool add(const T& item) override
