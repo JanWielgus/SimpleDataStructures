@@ -227,6 +227,16 @@ public:
     }
 
 
+    bool contain(const T& itemToFind) const override
+    {
+        for (int i=0; i < arraySize; i++)
+            if (array[i] == itemToFind)
+                return true;
+        
+        return false;
+    }
+
+
     size_t getSize() const override
     {
         return arraySize;

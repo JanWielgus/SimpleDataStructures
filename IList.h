@@ -88,6 +88,14 @@ public:
     virtual bool replace(const T& newItem, size_t index) = 0;
 
     /**
+     * @brief Check if this collection contains specific item.
+     * @param itemToFind Item to be found in the collection.
+     * @return true when element appears at least once in the collection,
+     * false otherwise.
+     */
+    virtual bool contain(const T& itemToFind) const = 0;
+
+    /**
      * @brief Returns amount of items in the array.
      */
     virtual size_t getSize() const = 0;

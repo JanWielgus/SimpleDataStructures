@@ -14,6 +14,8 @@
 // Issues:
 // FIXME: Removing the last element is not effective. I don't know if there is anything that can be done in one-way linked list.
 
+// TODO: think about using sentinel (wartownik) in this implementation.
+
 
 
 template <class T>
@@ -260,6 +262,16 @@ public:
         
         toReplace->data = newItem;
         return true;
+    }
+
+
+    bool contain(const T& itemToFind) const override
+    {
+        for (Node<T>* node = root; node != nullptr; node = node->next)
+            if (node->data == itemToFind)
+                return true;
+            
+        return false;
     }
 
     
