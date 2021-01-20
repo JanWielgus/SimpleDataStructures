@@ -12,7 +12,7 @@
 #include "Iterator.h"
 
 #ifdef ARDUINO
-    #include <arduino.h>
+    #include <Arduino.h>
 #endif
 
 
