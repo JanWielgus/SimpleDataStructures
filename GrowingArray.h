@@ -60,7 +60,7 @@ class GrowingArray : public IArray<T>
 {
 private:
     T* array = nullptr;
-    size_t MaxSize;
+    size_t MaxSize; // amt of allocated memory
     size_t arraySize = 0; // amt of elements in the array
     T null_item; // returned when provided index is out of bounds
     GrowingArrayIterator<T> iteratorInstance;
@@ -271,6 +271,12 @@ public:
 
 
 
+
+
+    size_t capacity() const
+    {
+        return MaxSize;
+    }
 
 
     /**
