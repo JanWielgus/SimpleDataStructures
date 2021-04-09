@@ -246,7 +246,7 @@ public:
     }
 
 
-    Iterator<T>* getIterator() override
+    Iterator<T>* iterator() override
     {
         iteratorInstance.reset();
         return &iteratorInstance;
@@ -275,7 +275,7 @@ public:
     }
 
     
-    size_t getSize() const override
+    size_t size() const override
     {
         return size;
     }
@@ -305,7 +305,7 @@ public:
 
 
 
-    RemovingIterator<T>* getRemovingIterator()
+    RemovingIterator<T>* removingIterator()
     {
         iteratorInstance.reset();
         return &iteratorInstance;
