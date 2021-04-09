@@ -76,7 +76,7 @@ public:
      * Always return the same pointer but each time reset the iterator.
      * Use this pointer, don't copy the instance.
      */
-    virtual Iterator<T>* getIterator() = 0;
+    virtual Iterator<T>* iterator() = 0;
 
     /**
      * @brief Replace item at the specified index with another item.
@@ -98,7 +98,7 @@ public:
     /**
      * @brief Returns amount of items in the array.
      */
-    virtual size_t getSize() const = 0;
+    virtual size_t size() const = 0;
 
     /**
      * @brief Checks if array is empty.
