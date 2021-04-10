@@ -105,6 +105,7 @@ namespace SimpleDataStructures
 
 
 
+
     template <class T>
     class LinkedList : public IList<T>
     {
@@ -356,13 +357,7 @@ namespace SimpleDataStructures
 
         void clear() override
         {
-            Node<T>* current = root;
-            while (current != nullptr)
-            {
-                Node<T>* next = current->next;
-                delete current;
-                current = next;
-            }
+            deleteFromNode(root);
             root = nullptr;
             tail = nullptr;
             _size = 0;
@@ -453,29 +448,57 @@ namespace SimpleDataStructures
          */
         void setFrom(const LinkedList& other)
         {
-            // TODO: this method could be improved !!! (could use existing allocated space)
-            clear();
-
-            _size = other._size;
-
-            if (_size > 0)
+            if (other._size == 0)
             {
-                root = new Node<T>();
-                root->data = other.root->data;
+                clear();
+                return;
             }
+
+
+            if (root == nullptr)
+                root = new Node<T>();
+
+            root->data = other.root->data;
 
             Node<T>* lastSrcNode = other.root;
             Node<T>* lastDestNode = root;
-            tail = root;
 
+            // copy all data
             while (lastSrcNode->next != nullptr)
             {
-                lastDestNode->next = new Node<T>();
+                // if node doesn't exist, allocate memory for a new node
+                if (lastDestNode->next == nullptr)
+                    lastDestNode->next = new Node<T>();
+
                 lastDestNode->next->data = lastSrcNode->next->data;
 
+                // move to next nodes
                 lastSrcNode = lastSrcNode->next;
                 lastDestNode = lastDestNode->next;
-                tail = lastDestNode;
+            }
+
+            // delete remaining nodes if this linked list was bigger than copied one
+            deleteFromNode(lastDestNode->next);
+
+            tail = lastDestNode;
+            tail->next = nullptr;
+
+            _size = other._size;
+        }
+
+
+        /**
+         * @brief Deleted passed node and all next nodes.
+         * @param startNode Pointer to the first node to delete.
+         */
+        void deleteFromNode(Node<T>* startNode)
+        {
+            Node<T>* nodeToDel = startNode;
+            while (nodeToDel != nullptr)
+            {
+                Node<T>* next = nodeToDel->next;
+                delete nodeToDel;
+                nodeToDel = next;
             }
         }
     };
