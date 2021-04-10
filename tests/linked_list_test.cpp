@@ -9,6 +9,11 @@ using namespace std;
 using namespace SimpleDataStructures;
 
 
+// TODO: make this tests general tests for IList interface
+// TODO: test contains
+// TODO: test find
+
+
 static int assertionNumber = 1;
 
 template <class T>
