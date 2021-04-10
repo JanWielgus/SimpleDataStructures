@@ -11,12 +11,6 @@
 
 #include "IList.h"
 
-// Issues:
-// FIXME: Removing the last element is not effective. I don't know if there is anything that can be done in one-way linked list.
-
-// TODO: think about using sentinel (wartownik) in this implementation.
-
-
 
 namespace SimpleDataStructures
 {
@@ -132,9 +126,60 @@ namespace SimpleDataStructures
         }
 
 
-        // TODO: implement copy constructor and assignment operator
-        LinkedList(const LinkedList& other) = delete;
-        LinkedList& operator=(const LinkedList& other) = delete;
+        LinkedList(const LinkedList& other)
+            : iteratorInstance(this)
+        {
+            setFrom(other);
+        }
+
+
+        LinkedList(LinkedList&& toMove)
+            : iteratorInstance(this)
+        {
+            root = toMove.root;
+            tail = toMove.tail;
+            _size = toMove._size;
+
+            toMove.root = nullptr;
+            toMove.tail = nullptr;
+            toMove._size = 0;
+            toMove.iteratorInstance.reset();
+        }
+
+
+        ~LinkedList()
+        {
+            clear();
+        }
+        
+
+        LinkedList& operator=(const LinkedList& other)
+        {
+            if (this != &other)
+                setFrom(other);
+
+            return *this;
+        }
+
+
+        LinkedList& operator=(LinkedList&& toMove)
+        {
+            if (this != &toMove)
+            {
+                clear();
+
+                root = toMove.root;
+                tail = toMove.tail;
+                _size = toMove._size;
+
+                toMove.root = nullptr;
+                toMove.tail = nullptr;
+                toMove._size = 0;
+                toMove.iteratorInstance.reset();
+            }
+
+            return *this;
+        }
 
 
         bool add(const T& item) override
@@ -399,6 +444,39 @@ namespace SimpleDataStructures
             _size--;
             iteratorInstance.reset();
             return true;
+        }
+
+
+        /**
+         * @brief Clear LinkedList and make a deep copy of data from other.
+         * @param other LinkedList to make a deep copy.
+         */
+        void setFrom(const LinkedList& other)
+        {
+            // TODO: this method could be improved !!! (could use existing allocated space)
+            clear();
+
+            _size = other._size;
+
+            if (_size > 0)
+            {
+                root = new Node<T>();
+                root->data = other.root->data;
+            }
+
+            Node<T>* lastSrcNode = other.root;
+            Node<T>* lastDestNode = root;
+            tail = root;
+
+            while (lastSrcNode->next != nullptr)
+            {
+                lastDestNode->next = new Node<T>();
+                lastDestNode->next->data = lastSrcNode->next->data;
+
+                lastSrcNode = lastSrcNode->next;
+                lastDestNode = lastDestNode->next;
+                tail = lastDestNode;
+            }
         }
     };
 

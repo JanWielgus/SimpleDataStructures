@@ -30,7 +30,9 @@ namespace SimpleDataStructures
 
     public:
         GrowingArrayIterator() {}
-        GrowingArrayIterator(const GrowingArrayIterator& other) = delete;
+
+        GrowingArrayIterator(const GrowingArrayIterator&) = delete;
+        GrowingArrayIterator& operator=(const GrowingArrayIterator&) = delete;
 
         bool hasNext() override
         {
@@ -108,10 +110,26 @@ namespace SimpleDataStructures
         }
 
 
+        /**
+         * @brief Move constructor.
+         * @param toMove GrowingArray to move.
+         */
+        GrowingArray(GrowingArray&& toMove)
+        {
+            array = toMove.array;
+            MaxSize = toMove.MaxSize;
+            arraySize = toMove.arraySize;
+
+            toMove.array = nullptr;
+            toMove.MaxSize = 0;
+            toMove.arraySize = 0;
+        }
+
+
         ~GrowingArray()
         {
             if (MaxSize > 0)
-                delete [] array;
+                delete[] array;
         }
 
 
@@ -139,6 +157,26 @@ namespace SimpleDataStructures
             }
 
             resetIterator();
+
+            return *this;
+        }
+
+
+        GrowingArray& operator=(GrowingArray&& toMove)
+        {
+            if (this != &toMove)
+            {
+                if (MaxSize > 0)
+                    delete[] array;
+
+                array = toMove.array;
+                MaxSize = toMove.MaxSize;
+                arraySize = toMove.arraySize;
+
+                toMove.array = nullptr;
+                toMove.MaxSize = 0;
+                toMove.arraySize = 0;
+            }
 
             return *this;
         }
