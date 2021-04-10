@@ -44,9 +44,9 @@ void showListUsingIterator(IList<T>& list)
 }
 
 
-void firstListTest();
-void removingUsingIteratorTest();
-void copyingTests();
+void firstListTest(IList<int>& testList);
+void removingUsingIteratorTest(LinkedList<int>& testList);
+void copyingTests(LinkedList<int>& testList);
 
 
 
@@ -57,12 +57,18 @@ int main()
     cout << "Absolute value of that code is index of performed test" << endl;
     cout << endl;
 
-    
-    firstListTest();
 
-    removingUsingIteratorTest();
+    LinkedList<int> testList;
 
-    copyingTests();
+
+    testList.clear();
+    firstListTest(testList);
+
+    testList.clear();
+    removingUsingIteratorTest(testList);
+
+    testList.clear();
+    copyingTests(testList);
 
 
     cout << "SUCCESS, end of testing" << endl;
@@ -74,13 +80,10 @@ int main()
 
 
 
-void firstListTest()
+void firstListTest(IList<int>& testList)
 {
     cout << "First list test" << endl;
     resetAssertionCounter();
-
-    LinkedList<int> testList;
-    //GrowingArray<int> testList; // you can also test GrowingArray
 
     assertEquals(true, testList.isEmpty());
     assertEquals<size_t>(0, testList.size());
@@ -100,12 +103,12 @@ void firstListTest()
     assertEquals(9, testList.get(4));
     assertEquals<size_t>(5, testList.size());
 
-    cout << endl;
-    showListUsingIterator(testList);
+    //cout << endl;
+    //showListUsingIterator(testList);
 
-    cout << endl;
-    for (int i = 0; i < testList.size(); i++)
-        cout << "elem: " << testList.get(i) << endl;
+    //cout << endl;
+    //for (int i = 0; i < testList.size(); i++)
+        //cout << "elem: " << testList.get(i) << endl;
 
 
     assertEquals(false, testList.isEmpty());
@@ -124,25 +127,23 @@ void firstListTest()
     assertEquals(false, testList.add(126, 4));
     assertEquals(false, testList.remove(3));
 
-    cout << endl;
-    showListUsingIterator(testList);
+    //cout << endl;
+    //showListUsingIterator(testList);
 
     testList.remove(1);
 
-    cout << endl;
-    showListUsingIterator(testList);
+    //cout << endl;
+    //showListUsingIterator(testList);
 
     cout << "passed" << endl;
 }
 
 
 
-void removingUsingIteratorTest()
+void removingUsingIteratorTest(LinkedList<int>& testList)
 {
     cout << "Removing using iterator test" << endl;
     resetAssertionCounter();
-
-    LinkedList<int> testList;
 
     testList.add(5);
     testList.add(6);
@@ -186,12 +187,10 @@ void removingUsingIteratorTest()
 
 
 
-void copyingTests()
+void copyingTests(LinkedList<int>& testList)
 {
     cout << "Copying tests" << endl;
     resetAssertionCounter();
-
-    LinkedList<int> testList;
 
     testList.add(5);
     testList.add(6);
