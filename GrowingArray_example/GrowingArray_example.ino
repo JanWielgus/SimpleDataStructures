@@ -6,6 +6,8 @@
 
 #include <GrowingArray.h>
 
+using SimpleDataStructures::GrowingArray;
+
 // something that pretend unit tests
 bool test1();
 
@@ -37,7 +39,7 @@ bool test1()
     testArray->add(1543);
     testArray->add(532);
 
-    if (testArray->getSize() != 8)
+    if (testArray->size() != 8)
         return false;
     if (testArray->get(0) != 1)
         return false;
