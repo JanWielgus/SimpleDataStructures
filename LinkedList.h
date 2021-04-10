@@ -265,7 +265,7 @@ public:
     }
 
 
-    bool contain(const T& itemToFind) const override
+    bool contains(const T& itemToFind) const override
     {
         for (Node<T>* node = root; node != nullptr; node = node->next)
             if (node->data == itemToFind)

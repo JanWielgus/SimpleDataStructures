@@ -93,7 +93,7 @@ public:
      * @return true when element appears at least once in the collection,
      * false otherwise.
      */
-    virtual bool contain(const T& itemToFind) const = 0;
+    virtual bool contains(const T& itemToFind) const = 0;
 
     /**
      * @brief Returns amount of items in the array.

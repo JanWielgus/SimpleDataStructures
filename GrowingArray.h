@@ -227,7 +227,7 @@ public:
     }
 
 
-    bool contain(const T& itemToFind) const override
+    bool contains(const T& itemToFind) const override
     {
         for (int i=0; i < arraySize; i++)
             if (array[i] == itemToFind)
