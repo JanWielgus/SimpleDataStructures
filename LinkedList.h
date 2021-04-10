@@ -115,7 +115,7 @@ class LinkedList : public IList<T>
 private:
     Node<T>* root = nullptr;
     Node<T>* tail = nullptr;
-    size_t size = 0;
+    size_t _size = 0;
     LinkedListIterator<T> iteratorInstance;
 
     T nullElement; // element returned for example when used get() on empty list
@@ -150,19 +150,19 @@ public:
             tail->data = item;
         }
         
-        size++;
+        _size++;
         return true;
     }
 
     
     bool add(const T& item, size_t index) override
     {
-        if (index > size)
+        if (index > _size)
             return false;
         
         bool returnFlag = true;
 
-        if (root == nullptr || index == size)
+        if (root == nullptr || index == _size)
             returnFlag = add(item);
         else // neither first nor last element
         {
@@ -171,7 +171,7 @@ public:
             newNode->data = item;
             newNode->next = preceding->next;
             preceding->next = newNode;
-            size++;
+            _size++;
         }
         
         return returnFlag;
@@ -188,7 +188,7 @@ public:
      */
     bool remove(size_t index) override
     {
-        if (root == nullptr || index >= size)
+        if (root == nullptr || index >= _size)
             return false;
         
         Node<T>* toDelete;
@@ -212,7 +212,7 @@ public:
         }
         
         delete toDelete;
-        size--;
+        _size--;
         iteratorInstance.reset();
         return true;
     }
@@ -277,7 +277,7 @@ public:
     
     size_t size() const override
     {
-        return size;
+        return _size;
     }
 
     
@@ -298,7 +298,7 @@ public:
         }
         root = nullptr;
         tail = nullptr;
-        size = 0;
+        _size = 0;
         iteratorInstance.reset();
     }
 
@@ -316,10 +316,10 @@ public:
 private:
     Node<T>* getNode(size_t index) const
     {
-        if (index >= size)
+        if (index >= _size)
             return nullptr;
 
-        if (index == size - 1)
+        if (index == _size - 1)
             return tail;
 
         Node<T>* lookedFor = root;
@@ -374,7 +374,7 @@ private:
         }
         
         delete nodeToRemove;
-        size--;
+        _size--;
         iteratorInstance.reset();
         return true;
     }
