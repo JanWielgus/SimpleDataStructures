@@ -9,10 +9,6 @@ using namespace std;
 using namespace SimpleDataStructures;
 
 
-// TODO: test contains
-// TODO: test find
-
-
 static int assertionNumber = 1;
 
 template <class T>
@@ -46,6 +42,7 @@ void showListUsingIterator(IList<T>& list)
 void firstListTest(IList<int>& testList);
 void removingUsingIteratorTest(LinkedList<int>& testList);
 void copyingTests(LinkedList<int>& testList);
+void elementFindTests(IList<int>& testList);
 
 
 
@@ -68,6 +65,9 @@ int main()
 
     testList.clear();
     copyingTests(testList);
+
+    testList.clear();
+    elementFindTests(testList);
 
 
     cout << "SUCCESS, end of testing" << endl;
@@ -207,6 +207,32 @@ void copyingTests(LinkedList<int>& testList)
     auto copiedListIter = copiedList.iterator();
     while (testListIter->hasNext())
         assertEquals(testListIter->next(), copiedListIter->next());
+
+
+    cout << "passed" << endl;
+}
+
+
+
+void elementFindTests(IList<int>& testList)
+{
+    cout << "Element find tests" << endl;
+    resetAssertionCounter();
+
+    testList.add(5);
+    testList.add(6);
+    testList.add(7);
+    testList.add(8);
+    testList.add(9);
+
+
+    assertEquals(true, testList.find(0) == npos);
+    assertEquals(true, testList.find(9) == 4);
+    assertEquals(true, testList.find(9, 4) == 4);
+    assertEquals(true, testList.find(5, 1) == npos);
+
+    assertEquals(true, testList.contains(8));
+    assertEquals(false, testList.contains(4));
 
 
     cout << "passed" << endl;
