@@ -6,6 +6,8 @@
 #include "GrowingArray.h"
 
 using namespace std;
+using namespace SimpleDataStructures;
+
 
 static int assertionNumber = 1;
 
@@ -15,6 +17,8 @@ void assertEquals(T expected, T actual)
     if (expected != actual)
     {
         cout << "TEST NUMBER " << assertionNumber << " FAILED" << endl;
+        cout << "Expected: " << expected << endl;
+        cout << "Actual: " << actual << endl;
         exit(-assertionNumber);
     }
     assertionNumber++;
@@ -28,7 +32,7 @@ void resetAssertionCounter()
 template <class T>
 void showListUsingIterator(IList<T>& list)
 {
-    Iterator<T>* iter = list.getIterator();
+    Iterator<T>* iter = list.iterator();
     int counter = 0;
     while (iter->hasNext())
         cout << counter++ << ". " << iter->next() << endl;;
@@ -37,6 +41,7 @@ void showListUsingIterator(IList<T>& list)
 
 void firstListTest();
 void removingUsingIteratorTest();
+void copyingTests();
 
 
 
@@ -51,6 +56,8 @@ int main()
     firstListTest();
 
     removingUsingIteratorTest();
+
+    copyingTests();
 
 
     cout << "SUCCESS, end of testing" << endl;
@@ -71,13 +78,13 @@ void firstListTest()
     //GrowingArray<int> testList; // you can also test GrowingArray
 
     assertEquals(true, testList.isEmpty());
-    assertEquals<size_t>(0, testList.getSize());
+    assertEquals<size_t>(0, testList.size());
     testList.add(5);
     testList.add(6);
     testList.add(7);
     testList.add(8);
     testList.add(9);
-    assertEquals<size_t>(5, testList.getSize());
+    assertEquals<size_t>(5, testList.size());
     assertEquals(8, testList.get(3));
     testList.remove(3);
     assertEquals(9, testList.get(3));
@@ -86,26 +93,26 @@ void firstListTest()
     assertEquals(66, testList.get(2));
     assertEquals(7, testList.get(3));
     assertEquals(9, testList.get(4));
-    assertEquals<size_t>(5, testList.getSize());
+    assertEquals<size_t>(5, testList.size());
 
     cout << endl;
     showListUsingIterator(testList);
 
     cout << endl;
-    for (int i = 0; i < testList.getSize(); i++)
+    for (int i = 0; i < testList.size(); i++)
         cout << "elem: " << testList.get(i) << endl;
 
 
     assertEquals(false, testList.isEmpty());
     testList.remove(4);
     assertEquals(7, testList.get(3));
-    assertEquals<size_t>(4, testList.getSize());
+    assertEquals<size_t>(4, testList.size());
     testList.remove(0);
     assertEquals(6, testList.get(0));
     assertEquals(66, testList.get(1));
     assertEquals(7, testList.get(2));
     testList.clear();
-    assertEquals<size_t>(0, testList.getSize());
+    assertEquals<size_t>(0, testList.size());
     testList.add(123, 0);
     assertEquals(true, testList.add(124, 1));
     assertEquals(true, testList.add(125, 2));
@@ -138,7 +145,7 @@ void removingUsingIteratorTest()
     testList.add(8);
     testList.add(9);
 
-    RemovingIterator<int>* removIter = testList.getRemovingIterator();
+    RemovingIterator<int>* removIter = testList.removingIterator();
 
     assertEquals(5, removIter->next());
     assertEquals(6, removIter->next());
@@ -155,20 +162,50 @@ void removingUsingIteratorTest()
     assertEquals(8, testList.get(1));
     assertEquals(9, testList.get(2));
 
-    assertEquals(3, (int)testList.getSize());
+    assertEquals(3, (int)testList.size());
 
 
-    Iterator<int>* iter = testList.getIterator();
+    Iterator<int>* iter = testList.iterator();
     assertEquals(5, iter->next());
     assertEquals(8, iter->next());
     assertEquals(9, iter->next());
 
 
-    removIter = testList.getRemovingIterator();
+    removIter = testList.removingIterator();
     assertEquals(5, removIter->next());
     assertEquals(8, removIter->next());
     assertEquals(9, removIter->next());
     
+    cout << "passed" << endl;
+}
+
+
+
+void copyingTests()
+{
+    cout << "Copying tests" << endl;
+    resetAssertionCounter();
+
+    LinkedList<int> testList;
+
+    testList.add(5);
+    testList.add(6);
+    testList.add(7);
+    testList.add(8);
+    testList.add(9);
+
+
+    LinkedList<int> copiedList(testList);
+
+    assertEquals(testList.size(), copiedList.size());
+    for (int i=0; i < testList.size(); i++)
+        assertEquals(testList.get(i), copiedList.get(i));
+    auto testListIter = testList.iterator();
+    auto copiedListIter = copiedList.iterator();
+    while (testListIter->hasNext())
+        assertEquals(testListIter->next(), copiedListIter->next());
+
+
     cout << "passed" << endl;
 }
 
