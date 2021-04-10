@@ -265,6 +265,26 @@ public:
     }
 
 
+    size_t find(const T& itemToFind, size_t startIndex = 0) const override
+    {
+        Node<T>* startNode = getNode(startIndex);
+
+        if (startNode == nullptr)
+            return npos;
+
+        size_t elemIndex = startIndex;
+        for (Node<T>* node = startNode; node != nullptr; node = node->next)
+        {
+            if (node->data == itemToFind)
+                return elemIndex;
+
+            elemIndex++;
+        }
+
+        return npos;
+    }
+
+
     bool contains(const T& itemToFind) const override
     {
         for (Node<T>* node = root; node != nullptr; node = node->next)

@@ -15,6 +15,10 @@
     #include <Arduino.h>
 #endif
 
+// TODO: think about namespace for all SimpleDataTypes
+
+const size_t npos = -1;
+
 
 template <class T>
 class IList
@@ -88,8 +92,17 @@ public:
     virtual bool replace(const T& newItem, size_t index) = 0;
 
     /**
+     * @brief Get index of the first occurence of itemToFind
+     * or npos if an item was not found.
+     * @param itemToFind Item you are looking for.
+     * @return index of the first found element or npos if
+     * element was not found.
+     */
+    virtual size_t find(const T& itemToFind, size_t startIndex = 0) const = 0;
+
+    /**
      * @brief Check if this collection contains specific item.
-     * @param itemToFind Item to be found in the collection.
+     * @param itemToFind Item you are looking for.
      * @return true when element appears at least once in the collection,
      * false otherwise.
      */

@@ -227,13 +227,19 @@ public:
     }
 
 
+    size_t find(const T& itemToFind, size_t startIndex = 0) const override
+    {
+        for (size_t i = startIndex; i < arraySize; i++)
+            if (array[i] == itemToFind)
+                return i;
+        
+        return npos;
+    }
+
+
     bool contains(const T& itemToFind) const override
     {
-        for (int i=0; i < arraySize; i++)
-            if (array[i] == itemToFind)
-                return true;
-        
-        return false;
+        return find(itemToFind) != npos;
     }
 
 
