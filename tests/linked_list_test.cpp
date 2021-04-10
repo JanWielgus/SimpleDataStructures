@@ -9,7 +9,6 @@ using namespace std;
 using namespace SimpleDataStructures;
 
 
-// TODO: make this tests general tests for IList interface
 // TODO: test contains
 // TODO: test find
 
