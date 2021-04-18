@@ -139,6 +139,7 @@ namespace SimpleDataStructures
             toMove.array = nullptr;
             toMove.AllocatedSize = 0;
             toMove.arraySize = 0;
+            toMove.iteratorInstance.reset();
         }
 
 
@@ -186,6 +187,7 @@ namespace SimpleDataStructures
                 toMove.array = nullptr;
                 toMove.AllocatedSize = 0;
                 toMove.arraySize = 0;
+                toMove.iteratorInstance.reset();
             }
 
             return *this;
