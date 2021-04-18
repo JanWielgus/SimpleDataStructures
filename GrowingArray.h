@@ -17,16 +17,12 @@
 namespace SimpleDataStructures
 {
     template <class T>
-    class GrowingArray;
-
-
-    template <class T>
     class GrowingArrayIterator : public Iterator<T>
     {
     private:
         T* currentElement = nullptr;
         size_t remainingElements = 0;
-        T nullElement; // element returned when called next() when any elements were available
+        T nullElement; // element returned when called next() when no elements were available
 
     public:
         GrowingArrayIterator() {}
@@ -55,7 +51,27 @@ namespace SimpleDataStructures
             }
         }
 
-        friend class GrowingArray<T>;
+
+        /**
+         * @brief Prepare iterator to work.
+         * @param array Array to iterate through (pointer to the first element).
+         * @param size Amount of elements to iterate.
+         */
+        void setup(T* array, size_t size)
+        {
+            currentElement = array;
+            remainingElements = size;
+        }
+
+
+        /**
+         * @brief Makes that next call of hasNext() method of iterator will return false.
+         * This method is used after any modifications to outdate the iterator.
+         */
+        void reset()
+        {
+            remainingElements = 0;
+        }
     };
 
 
@@ -69,10 +85,10 @@ namespace SimpleDataStructures
     template <class T>
     class GrowingArray : public IArray<T>
     {
-    private:
         T* array = nullptr;
-        size_t MaxSize; // amt of allocated memory
+        size_t AllocatedSize = 0;
         size_t arraySize = 0; // amt of elements in the array
+
         T null_item; // returned when provided index is out of bounds
         GrowingArrayIterator<T> iteratorInstance;
 
@@ -81,14 +97,14 @@ namespace SimpleDataStructures
         GrowingArray()
         {
             array = nullptr;
-            MaxSize = 0;
+            AllocatedSize = 0;
             arraySize = 0;
         }
 
 
-        GrowingArray(size_t initialSize)
+        explicit GrowingArray(size_t initialSize)
         {
-            ensureCapacity(initialSize);
+            ensureCapacity(initialSize, false);
             arraySize = 0;
         }
 
@@ -101,12 +117,12 @@ namespace SimpleDataStructures
          */
         GrowingArray(const GrowingArray& other)
         {
-            ensureCapacity(other.arraySize);
-            arraySize = other.arraySize;
-            null_item = other.null_item;
+            ensureCapacity(other.arraySize, false);
 
-            for (size_t i = 0; i < arraySize; i++)
+            for (size_t i = 0; i < other.arraySize; i++)
                 array[i] = other.array[i];
+
+            arraySize = other.arraySize;
         }
 
 
@@ -117,19 +133,18 @@ namespace SimpleDataStructures
         GrowingArray(GrowingArray&& toMove)
         {
             array = toMove.array;
-            MaxSize = toMove.MaxSize;
+            AllocatedSize = toMove.AllocatedSize;
             arraySize = toMove.arraySize;
 
             toMove.array = nullptr;
-            toMove.MaxSize = 0;
+            toMove.AllocatedSize = 0;
             toMove.arraySize = 0;
         }
 
 
         ~GrowingArray()
         {
-            if (MaxSize > 0)
-                delete[] array;
+            delete[] array;
         }
 
 
@@ -144,19 +159,15 @@ namespace SimpleDataStructures
         {
             if (this != &other)
             {
-                if (MaxSize != other.arraySize)
-                {
-                    delete [] array;
-                    array = new T[other.arraySize];
-                    MaxSize = other.arraySize;
-                    arraySize = other.arraySize;
-                }
+                ensureCapacity(other.arraySize, false);
 
-                for (size_t i = 0; i < arraySize; i++)
+                for (size_t i = 0; i < other.arraySize; i++)
                     array[i] = other.array[i];
-            }
+                
+                arraySize = other.arraySize;
 
-            resetIterator();
+                iteratorInstance.reset();
+            }
 
             return *this;
         }
@@ -166,15 +177,14 @@ namespace SimpleDataStructures
         {
             if (this != &toMove)
             {
-                if (MaxSize > 0)
-                    delete[] array;
+                delete[] array;
 
                 array = toMove.array;
-                MaxSize = toMove.MaxSize;
+                AllocatedSize = toMove.AllocatedSize;
                 arraySize = toMove.arraySize;
 
                 toMove.array = nullptr;
-                toMove.MaxSize = 0;
+                toMove.AllocatedSize = 0;
                 toMove.arraySize = 0;
             }
 
@@ -184,7 +194,7 @@ namespace SimpleDataStructures
 
         bool add(const T& item) override
         {
-            ensureCapacity(arraySize + 1);
+            ensureCapacity(arraySize + 1); // TODO: should be always by one??
 
             array[arraySize] = item;
             arraySize++;
@@ -220,7 +230,7 @@ namespace SimpleDataStructures
                 array[i - 1] = array[i];
             
             arraySize--;
-            resetIterator(); // probably could be replaced with just decreasing remainingElements in iterator instance
+            iteratorInstance.reset();
             return true;
             // TODO: add decreasing size of the allocated space
         }
@@ -240,13 +250,13 @@ namespace SimpleDataStructures
 
         T& operator[](size_t index) override
         {
-            return get(index);
+            return index < arraySize ? array[index] : null_item;
         }
 
 
         const T& operator[](size_t index) const override
         {
-            return get(index);
+            return index < arraySize ? array[index] : null_item;
         }
 
 
@@ -258,8 +268,7 @@ namespace SimpleDataStructures
 
         Iterator<T>* iterator() override
         {
-            iteratorInstance.currentElement = array;
-            iteratorInstance.remainingElements = arraySize;
+            iteratorInstance.setup(array, arraySize);
             return &iteratorInstance;
         }
 
@@ -313,12 +322,11 @@ namespace SimpleDataStructures
          */
         void clear() override
         {
-            if (MaxSize > 0)
-                delete [] array;
+            delete [] array;
             array = nullptr;
-            MaxSize = 0;
+            AllocatedSize = 0;
             arraySize = 0;
-            resetIterator();
+            iteratorInstance.reset();
         }
 
 
@@ -328,48 +336,55 @@ namespace SimpleDataStructures
 
         size_t capacity() const
         {
-            return MaxSize;
+            return AllocatedSize;
         }
 
 
         /**
-         * @brief Make array to have at least provided size.
-         * 
-         * @param minimumSize Minimum size of array to have
+         * @brief Make array to have at least provided size
+         * (old data will remain untouched).
+         * This method don't shrink the allocated space.
+         * @param minimumSize Minimum size that array should have.
          */
         void ensureCapacity(size_t minimumSize)
         {
-            if (minimumSize <= MaxSize)
+            ensureCapacity(minimumSize, true);
+        }
+
+
+    private:
+        /**
+         * @brief Make array to have at least provided size.
+         * If need to allocate new bigger array, keepData flag
+         * decide if should copy old data to the new array or not.
+         * This method don't shrink the allocated space.
+         * @param minimumSize Minimum size that array should have.
+         * @param keepData Flag. If true: after reallocation all
+         * previous data will be copied. If false: in such situation
+         * prev data won't be copied. 
+         */
+        void ensureCapacity(size_t minimumSize, bool keepData)
+        {
+            if (minimumSize <= AllocatedSize)
                 return;
             
-            if (MaxSize == 0)
+            if (array == nullptr)
                 array = new T[minimumSize];
             else
             {
                 T* biggerArray = new T[minimumSize];
 
-                for (size_t i = 0; i < arraySize; i++)
-                    biggerArray[i] = array[i];
+                if (keepData)
+                    for (size_t i = 0; i < arraySize; i++)
+                        biggerArray[i] = array[i];
                 
-                delete [] array;
+                delete[] array;
                 array = biggerArray;
             }
 
-            MaxSize = minimumSize;
+            AllocatedSize = minimumSize;
 
-            resetIterator();
-        }
-
-
-
-    private:
-        /**
-         * @brief Makes that next call of hasNext() method of iterator will return false.
-         * This method is used after any modifications to outdate the iterator.
-         */
-        void resetIterator()
-        {
-            iteratorInstance.remainingElements = 0;
+            iteratorInstance.reset();
         }
     };
 }
