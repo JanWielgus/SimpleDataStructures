@@ -15,11 +15,6 @@
 namespace SimpleDataStructures
 {
     template <class T>
-    class LinkedList;
-
-
-
-    template <class T>
     class Node
     {
     public:
@@ -39,83 +34,63 @@ namespace SimpleDataStructures
 
 
 
+
     template <class T>
-    class LinkedListIterator : public RemovingIterator<T>
+    class LinkedListIterator : public Iterator<T>
     {
-    private:
-        Node<T> predecessorNode; // TODO: think about that. Really need it to be an object?
-        Node<T>* currentNode = &predecessorNode; // currentNode HAVE TO ALWAYS BE NOT NULL
-        LinkedList<T>* linkedList;
+        Node<T>* nextNode = nullptr;
         T nullElement;
 
     public:
-        /**
-         * @brief Construct the linked list iterator for specified linked list.
-         * @param linkedList pointer to the linked list 
-         */
-        explicit LinkedListIterator(LinkedList<T>* linkedList)
-        {
-            this->linkedList = linkedList;
-            predecessorNode.next = nullptr;
-            reset();
-        }
+        LinkedListIterator() {}
 
         LinkedListIterator(const LinkedListIterator&) = delete;
         LinkedListIterator& operator=(const LinkedListIterator&) = delete;
 
 
         /**
-         * @return true if iterator is not at the end and next() method can be used.
-         * If returned false, don't use next method().
+         * @return trueif there is some data to be obtained
+         * by calling next() method. If returned false,
+         * don't use next() method.
          */
         bool hasNext() override
         {
-            return currentNode->next != nullptr;
+            return nextNode != nullptr;
         }
 
 
         /**
-         * @return pointer to next data or nullptr if there is no next data.
-         * Check if there are any data using hasNext() method first!
+         * @return reference to next data or default value
+         * if next data is not available. Check if there is
+         * any data using hasNext() method first!
          */
         T& next() override
         {
-            if (currentNode->next == nullptr)
+            if (nextNode == nullptr)
                 return nullElement;
-            
-            currentNode = currentNode->next;
-            return currentNode->data;
+
+            T& toReturn = nextNode->data;
+            nextNode = nextNode->next;
+            return toReturn;
         }
 
 
         /**
-         * @brief Remove last element returned by next() method.
-         * Cannot be used several times in a row. next() have to be always used before removing an element.
-         * @return false if used without next() before, list is empty or there is no elements to remove.
-         * Returns true if element was removed.
-         */
-        bool remove() override
-        {
-            if (currentNode == &predecessorNode) // trying to remove element before calling next()
-                return false;
-            
-            Node<T>* nextNodeBackup = currentNode->next;
-                
-            linkedList->removeNode(currentNode);
-
-            predecessorNode.next = nextNodeBackup;
-            currentNode = &predecessorNode;
-            return true;
-        }
-
-
-        /**
-         * @brief Sets the iterator to the linked list beginning (if is empty, thats ok).
+         * @brief Iterator won't have next elements from now.
          */
         void reset()
         {
-            predecessorNode.next = linkedList->root;
-            currentNode = &predecessorNode;
+            nextNode = nullptr;
+        }
+
+
+        /**
+         * @brief Initialize the iterator.
+         * @param startNode Node from the iteration will begin.
+         */
+        void setup(Node<T>* startNode)
+        {
+            nextNode = startNode;
         }
     };
 
@@ -125,7 +100,6 @@ namespace SimpleDataStructures
     template <class T>
     class LinkedList : public IList<T>
     {
-    private:
         Node<T>* root = nullptr;
         Node<T>* tail = nullptr;
         size_t linkedListSize = 0;
@@ -133,25 +107,18 @@ namespace SimpleDataStructures
 
         T nullElement; // element returned for example when used get() on empty list
 
-        friend class LinkedListIterator<T>;
-
 
     public:
-        LinkedList()
-            : iteratorInstance(this)
-        {
-        }
+        LinkedList() {}
 
 
         LinkedList(const LinkedList& other)
-            : iteratorInstance(this)
         {
             setFrom(other);
         }
 
 
         LinkedList(LinkedList&& toMove)
-            : iteratorInstance(this)
         {
             root = toMove.root;
             tail = toMove.tail;
@@ -199,7 +166,7 @@ namespace SimpleDataStructures
         }
 
 
-        bool add(const T& item) override // TODO: refactor again
+        bool add(const T& item) override
         {
             if (root == nullptr)
             {
@@ -309,7 +276,7 @@ namespace SimpleDataStructures
 
         Iterator<T>* iterator() override
         {
-            iteratorInstance.reset();
+            iteratorInstance.setup(root);
             return &iteratorInstance;
         }
 
@@ -375,15 +342,6 @@ namespace SimpleDataStructures
             tail = nullptr;
             linkedListSize = 0;
             iteratorInstance.reset();
-        }
-
-
-
-
-        RemovingIterator<T>* removingIterator()
-        {
-            iteratorInstance.reset();
-            return &iteratorInstance;
         }
 
 

@@ -42,7 +42,6 @@ void showListUsingIterator(IList<T>& list)
 
 // Testing functions:
 void firstListTest(IList<int>& testList);
-void removingUsingIteratorTest(LinkedList<int>& testList);
 template <class T>
 void copyingTests(T& testList);
 void elementFindTests(IList<int>& testList);
@@ -63,9 +62,6 @@ int main()
 
     testList.clear();
     firstListTest(testList);
-
-    testList.clear();
-    removingUsingIteratorTest(testList);
 
     testList.clear();
     copyingTests(testList);
@@ -156,53 +152,6 @@ void firstListTest(IList<int>& testList)
 
 
 
-void removingUsingIteratorTest(LinkedList<int>& testList)
-{
-    cout << "Removing using iterator test" << endl;
-    resetAssertionCounter();
-
-    testList.add(5);
-    testList.add(6);
-    testList.add(7);
-    testList.add(8);
-    testList.add(9);
-
-    RemovingIterator<int>* removIter = testList.removingIterator();
-
-    assertEquals(5, removIter->next());
-    assertEquals(6, removIter->next());
-    assertEquals(true, removIter->remove());
-    assertEquals(false, removIter->remove());
-    assertEquals(7, removIter->next());
-    assertEquals(true, removIter->remove());
-    assertEquals(8, removIter->next());
-    assertEquals(9, removIter->next());
-    assertEquals(false, removIter->hasNext());
-
-
-    assertEquals(5, testList.get(0));
-    assertEquals(8, testList.get(1));
-    assertEquals(9, testList.get(2));
-
-    assertEquals(3, (int)testList.size());
-
-
-    Iterator<int>* iter = testList.iterator();
-    assertEquals(5, iter->next());
-    assertEquals(8, iter->next());
-    assertEquals(9, iter->next());
-
-
-    removIter = testList.removingIterator();
-    assertEquals(5, removIter->next());
-    assertEquals(8, removIter->next());
-    assertEquals(9, removIter->next());
-    
-    cout << "passed" << endl;
-}
-
-
-
 template <class T>
 void copyingTests(T& testList)
 {
@@ -215,7 +164,6 @@ void copyingTests(T& testList)
     testList.add(8);
     testList.add(9);
 
-
     T copiedList(testList);
 
     assertEquals(testList.size(), copiedList.size());
@@ -223,6 +171,28 @@ void copyingTests(T& testList)
         assertEquals(testList.get(i), copiedList.get(i));
     auto testListIter = testList.iterator();
     auto copiedListIter = copiedList.iterator();
+    while (testListIter->hasNext())
+        assertEquals(testListIter->next(), copiedListIter->next());
+
+
+    // -- assignment tests --
+    
+    testList.clear();
+    copiedList.clear();
+
+    testList.add(5);
+    testList.add(6);
+    testList.add(7);
+    testList.add(8);
+    testList.add(9);
+
+    copiedList = testList;
+
+    assertEquals(testList.size(), copiedList.size());
+    for (int i=0; i < testList.size(); i++)
+        assertEquals(testList.get(i), copiedList.get(i));
+    testListIter = testList.iterator();
+    copiedListIter = copiedList.iterator();
     while (testListIter->hasNext())
         assertEquals(testListIter->next(), copiedListIter->next());
 
