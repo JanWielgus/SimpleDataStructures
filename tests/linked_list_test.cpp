@@ -39,9 +39,12 @@ void showListUsingIterator(IList<T>& list)
 }
 
 
+
+// Testing functions:
 void firstListTest(IList<int>& testList);
 void removingUsingIteratorTest(LinkedList<int>& testList);
-void copyingTests(LinkedList<int>& testList);
+template <class T>
+void copyingTests(T& testList);
 void elementFindTests(IList<int>& testList);
 
 
@@ -54,8 +57,9 @@ int main()
     cout << endl;
 
 
-    LinkedList<int> testList;
 
+    cout << endl << ">> Linked list tests:" << endl;
+    LinkedList<int> testList;
 
     testList.clear();
     firstListTest(testList);
@@ -70,7 +74,20 @@ int main()
     elementFindTests(testList);
 
 
-    cout << "SUCCESS, end of testing" << endl;
+    cout << endl << ">> Growing array tests:" << endl;
+    GrowingArray<int> testGrowingArray;
+
+    testGrowingArray.clear();
+    firstListTest(testGrowingArray);
+
+    testGrowingArray.clear();
+    copyingTests(testGrowingArray);
+
+    testGrowingArray.clear();
+    elementFindTests(testGrowingArray);
+
+
+    cout << ">> SUCCESS, end of testing" << endl;
 
 
     return 0;
@@ -186,7 +203,8 @@ void removingUsingIteratorTest(LinkedList<int>& testList)
 
 
 
-void copyingTests(LinkedList<int>& testList)
+template <class T>
+void copyingTests(T& testList)
 {
     cout << "Copying tests" << endl;
     resetAssertionCounter();
@@ -198,7 +216,7 @@ void copyingTests(LinkedList<int>& testList)
     testList.add(9);
 
 
-    LinkedList<int> copiedList(testList);
+    T copiedList(testList);
 
     assertEquals(testList.size(), copiedList.size());
     for (int i=0; i < testList.size(); i++)
