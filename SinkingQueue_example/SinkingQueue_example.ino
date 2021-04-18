@@ -6,6 +6,8 @@
 
 #include <StaticSinkingQueue.h>
 
+using SimpleDataStructures::StaticSinkingQueue;
+
 int test1();
 
 
