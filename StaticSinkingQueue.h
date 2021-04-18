@@ -27,13 +27,13 @@ namespace SimpleDataStructures
 
     public:
         StaticSinkingQueue(size_t queueSize)
-            : SimpleQueue(queueSize)
+            : StaticQueue<T>(queueSize)
         {
         }
 
 
         StaticSinkingQueue(const StaticSinkingQueue& other)
-            : SimpleQueue(other)
+            : StaticQueue<T>(other)
         {
         }
 
