@@ -24,7 +24,17 @@ namespace SimpleDataStructures
     {
     public:
         T data;
-        Node<T>* next = nullptr;
+        Node<T>* next;
+
+        Node()
+            : next(nullptr)
+        {
+        }
+
+        Node(const T& _data, Node<T>* _next = nullptr)
+            : data(_data), next(_next)
+        {
+        }
     };
 
 
@@ -33,7 +43,7 @@ namespace SimpleDataStructures
     class LinkedListIterator : public RemovingIterator<T>
     {
     private:
-        Node<T> predecessorNode;
+        Node<T> predecessorNode; // TODO: think about that. Really need it to be an object?
         Node<T>* currentNode = &predecessorNode; // currentNode HAVE TO ALWAYS BE NOT NULL
         LinkedList<T>* linkedList;
         T nullElement;
@@ -43,10 +53,15 @@ namespace SimpleDataStructures
          * @brief Construct the linked list iterator for specified linked list.
          * @param linkedList pointer to the linked list 
          */
-        explicit LinkedListIterator(LinkedList<T>* linkedList);
+        explicit LinkedListIterator(LinkedList<T>* linkedList)
+        {
+            this->linkedList = linkedList;
+            predecessorNode.next = nullptr;
+            reset();
+        }
 
-        LinkedListIterator(const LinkedListIterator& other) = delete; // do not allow copying this class
-        LinkedListIterator& operator=(const LinkedListIterator& other) = delete;
+        LinkedListIterator(const LinkedListIterator&) = delete;
+        LinkedListIterator& operator=(const LinkedListIterator&) = delete;
 
 
         /**
@@ -97,10 +112,11 @@ namespace SimpleDataStructures
         /**
          * @brief Sets the iterator to the linked list beginning (if is empty, thats ok).
          */
-        void reset();
-
-
-        friend class LinkedList<T>;
+        void reset()
+        {
+            predecessorNode.next = linkedList->root;
+            currentNode = &predecessorNode;
+        }
     };
 
 
@@ -112,7 +128,7 @@ namespace SimpleDataStructures
     private:
         Node<T>* root = nullptr;
         Node<T>* tail = nullptr;
-        size_t _size = 0;
+        size_t linkedListSize = 0;
         LinkedListIterator<T> iteratorInstance;
 
         T nullElement; // element returned for example when used get() on empty list
@@ -139,11 +155,11 @@ namespace SimpleDataStructures
         {
             root = toMove.root;
             tail = toMove.tail;
-            _size = toMove._size;
+            linkedListSize = toMove.linkedListSize;
 
             toMove.root = nullptr;
             toMove.tail = nullptr;
-            toMove._size = 0;
+            toMove.linkedListSize = 0;
             toMove.iteratorInstance.reset();
         }
 
@@ -171,11 +187,11 @@ namespace SimpleDataStructures
 
                 root = toMove.root;
                 tail = toMove.tail;
-                _size = toMove._size;
+                linkedListSize = toMove.linkedListSize;
 
                 toMove.root = nullptr;
                 toMove.tail = nullptr;
-                toMove._size = 0;
+                toMove.linkedListSize = 0;
                 toMove.iteratorInstance.reset();
             }
 
@@ -183,43 +199,40 @@ namespace SimpleDataStructures
         }
 
 
-        bool add(const T& item) override
+        bool add(const T& item) override // TODO: refactor again
         {
             if (root == nullptr)
             {
-                root = new Node<T>();
-                root->data = item;
+                root = new Node<T>(item);
                 tail = root;
             }
             else
             {
-                tail->next = new Node<T>();
+                tail->next = new Node<T>(item);
                 tail = tail->next;
-                tail->data = item;
             }
             
-            _size++;
+            linkedListSize++;
             return true;
         }
 
         
         bool add(const T& item, size_t index) override
         {
-            if (index > _size)
+            if (index > linkedListSize)
                 return false;
             
             bool returnFlag = true;
 
-            if (root == nullptr || index == _size)
+            if (root == nullptr || index == linkedListSize)
                 returnFlag = add(item);
             else // neither first nor last element
             {
                 Node<T>* preceding = getNode(index - 1);
-                Node<T>* newNode = new Node<T>();
-                newNode->data = item;
+                Node<T>* newNode = new Node<T>(item);
                 newNode->next = preceding->next;
                 preceding->next = newNode;
-                _size++;
+                linkedListSize++;
             }
             
             return returnFlag;
@@ -236,7 +249,7 @@ namespace SimpleDataStructures
          */
         bool remove(size_t index) override
         {
-            if (root == nullptr || index >= _size)
+            if (root == nullptr || index >= linkedListSize)
                 return false;
             
             Node<T>* toDelete;
@@ -260,7 +273,7 @@ namespace SimpleDataStructures
             }
             
             delete toDelete;
-            _size--;
+            linkedListSize--;
             iteratorInstance.reset();
             return true;
         }
@@ -345,7 +358,7 @@ namespace SimpleDataStructures
         
         size_t size() const override
         {
-            return _size;
+            return linkedListSize;
         }
 
         
@@ -360,7 +373,7 @@ namespace SimpleDataStructures
             deleteFromNode(root);
             root = nullptr;
             tail = nullptr;
-            _size = 0;
+            linkedListSize = 0;
             iteratorInstance.reset();
         }
 
@@ -378,10 +391,10 @@ namespace SimpleDataStructures
     private:
         Node<T>* getNode(size_t index) const
         {
-            if (index >= _size)
+            if (index >= linkedListSize)
                 return nullptr;
 
-            if (index == _size - 1)
+            if (index == linkedListSize - 1)
                 return tail;
 
             Node<T>* lookedFor = root;
@@ -410,7 +423,6 @@ namespace SimpleDataStructures
         }
 
 
-        // TODO: check two remove and one getNode methods and try to simplify by merging / modifying them
         bool removeNode(const Node<T>* nodeToRemove)
         {
             if (root == nullptr || nodeToRemove == nullptr)
@@ -436,9 +448,25 @@ namespace SimpleDataStructures
             }
             
             delete nodeToRemove;
-            _size--;
+            linkedListSize--;
             iteratorInstance.reset();
             return true;
+        }
+
+
+        /**
+         * @brief Delete passed node and all next nodes.
+         * @param startNode Pointer to the first node to delete.
+         */
+        void deleteFromNode(Node<T>* startNode)
+        {
+            Node<T>* nodeToDel = startNode;
+            while (nodeToDel != nullptr)
+            {
+                Node<T>* next = nodeToDel->next;
+                delete nodeToDel;
+                nodeToDel = next;
+            }
         }
 
 
@@ -448,7 +476,7 @@ namespace SimpleDataStructures
          */
         void setFrom(const LinkedList& other)
         {
-            if (other._size == 0)
+            if (other.linkedListSize == 0)
             {
                 clear();
                 return;
@@ -483,46 +511,9 @@ namespace SimpleDataStructures
             tail = lastDestNode;
             tail->next = nullptr;
 
-            _size = other._size;
-        }
-
-
-        /**
-         * @brief Deleted passed node and all next nodes.
-         * @param startNode Pointer to the first node to delete.
-         */
-        void deleteFromNode(Node<T>* startNode)
-        {
-            Node<T>* nodeToDel = startNode;
-            while (nodeToDel != nullptr)
-            {
-                Node<T>* next = nodeToDel->next;
-                delete nodeToDel;
-                nodeToDel = next;
-            }
+            linkedListSize = other.linkedListSize;
         }
     };
-
-
-
-
-
-
-    template <class T>
-    LinkedListIterator<T>::LinkedListIterator(LinkedList<T>* linkedList)
-    {
-        this->linkedList = linkedList;
-        predecessorNode.next = nullptr;
-        reset();
-    }
-
-
-    template <class T>
-    void LinkedListIterator<T>::reset()
-    {
-        predecessorNode.next = linkedList->root;
-        currentNode = &predecessorNode;
-    }
 }
 
 
