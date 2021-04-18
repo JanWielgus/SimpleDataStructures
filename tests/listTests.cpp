@@ -159,13 +159,18 @@ void firstListTest()
     assertEquals(false, testList.add(126, 4));
     assertEquals(false, testList.remove(3));
 
-    //cout << endl;
-    //showListUsingIterator(testList);
+    testList.remove(0);
+    testList.remove(0);
+    testList.remove(0);
 
-    //testList.remove(1);
+    assertEquals(true, testList.isEmpty());
 
-    //cout << endl;
-    //showListUsingIterator(testList);
+    for (int i = 0; i < 100; i++)
+        testList.add(i, 0);
+
+    assertEquals<size_t>(100, testList.size());
+    assertEquals(0, testList[99]);
+    assertEquals(99, testList.get(0));
 }
 
 

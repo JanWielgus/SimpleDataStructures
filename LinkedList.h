@@ -188,21 +188,27 @@ namespace SimpleDataStructures
         {
             if (index > linkedListSize)
                 return false;
-            
-            bool returnFlag = true;
 
             if (root == nullptr || index == linkedListSize)
-                returnFlag = add(item);
-            else // neither first nor last element
+                return add(item);
+
+            Node<T>* newNode = new Node<T>(item);
+
+            if (index == 0)
+            {
+                newNode->next = root;
+                root = newNode;
+            }
+            else
             {
                 Node<T>* preceding = getNode(index - 1);
-                Node<T>* newNode = new Node<T>(item);
                 newNode->next = preceding->next;
                 preceding->next = newNode;
-                linkedListSize++;
             }
+
+            linkedListSize++;
             
-            return returnFlag;
+            return true;
         }
 
 
