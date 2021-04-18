@@ -1,9 +1,7 @@
-// XXX: IMPORTANT THING: virtual methods are slower, but not when I have virtual in interface class and non-virtual methods in concrete classes. So don't use virtual in concrete classes, in abstract is OK.
-
 #include <iostream>
 #include <cstdlib>
-#include "LinkedList.h"
-#include "GrowingArray.h"
+#include "../LinkedList.h"
+#include "../GrowingArray.h"
 
 using namespace std;
 using namespace SimpleDataStructures;
@@ -39,52 +37,30 @@ void showListUsingIterator(IList<T>& list)
 }
 
 
+template <class T>
+void performTests(string header);
 
 // Testing functions:
-void firstListTest(IList<int>& testList);
 template <class T>
-void copyingTests(T& testList);
-void elementFindTests(IList<int>& testList);
+void clearMethodTest();
+template <class T>
+void firstListTest();
+template <class T>
+void copyingTests();
+template <class T>
+void elementFindTests();
 
 
 
 int main()
 {
-    cout << "Testing linked list" << endl;
     cout << "Negative exit code indicate failure of any test" << endl;
-    cout << "Absolute value of that code is index of performed test" << endl;
-    cout << endl;
+    cout << "Absolute value of that code is number of assertion in a test" << endl;
 
+    performTests<LinkedList<int>>("Linked list tests");
+    performTests<GrowingArray<int>>("Growing array tests");
 
-
-    cout << endl << ">> Linked list tests:" << endl;
-    LinkedList<int> testList;
-
-    testList.clear();
-    firstListTest(testList);
-
-    testList.clear();
-    copyingTests(testList);
-
-    testList.clear();
-    elementFindTests(testList);
-
-
-    cout << endl << ">> Growing array tests:" << endl;
-    GrowingArray<int> testGrowingArray;
-
-    testGrowingArray.clear();
-    firstListTest(testGrowingArray);
-
-    testGrowingArray.clear();
-    copyingTests(testGrowingArray);
-
-    testGrowingArray.clear();
-    elementFindTests(testGrowingArray);
-
-
-    cout << ">> SUCCESS, end of testing" << endl;
-
+    cout << endl << ">> SUCCESS, end of testing" << endl;
 
     return 0;
 }
@@ -92,13 +68,57 @@ int main()
 
 
 
-void firstListTest(IList<int>& testList)
+template <class Test>
+void performSingleTest(Test test, string testName)
 {
-    cout << "First list test" << endl;
+    cout << "Performing: " << testName << " ... ";
     resetAssertionCounter();
+    test();
+    cout << "passed" << endl;
+}
+
+template <class T>
+void performTests(string header)
+{
+    cout << endl << ">> " << header << ":" << endl;
+
+    performSingleTest(clearMethodTest<T>, "clearMethodTest");
+    performSingleTest(firstListTest<T>, "firstListTest");
+    performSingleTest(copyingTests<T>, "copyingTests");
+    performSingleTest(elementFindTests<T>, "elementFindTests");
+    // other tests...
+}
+
+
+
+
+
+template <class T>
+void clearMethodTest()
+{
+    T testList;
 
     assertEquals(true, testList.isEmpty());
     assertEquals<size_t>(0, testList.size());
+
+    testList.add(5);
+    testList.add(6);
+    testList.add(7);
+    testList.add(8);
+    testList.add(9);
+
+    testList.clear();
+
+    assertEquals(true, testList.isEmpty());
+    assertEquals<size_t>(0, testList.size());
+}
+
+
+template <class T>
+void firstListTest()
+{
+    T testList;
+
     testList.add(5);
     testList.add(6);
     testList.add(7);
@@ -142,21 +162,18 @@ void firstListTest(IList<int>& testList)
     //cout << endl;
     //showListUsingIterator(testList);
 
-    testList.remove(1);
+    //testList.remove(1);
 
     //cout << endl;
     //showListUsingIterator(testList);
-
-    cout << "passed" << endl;
 }
 
 
 
 template <class T>
-void copyingTests(T& testList)
+void copyingTests()
 {
-    cout << "Copying tests" << endl;
-    resetAssertionCounter();
+    T testList;
 
     testList.add(5);
     testList.add(6);
@@ -195,17 +212,14 @@ void copyingTests(T& testList)
     copiedListIter = copiedList.iterator();
     while (testListIter->hasNext())
         assertEquals(testListIter->next(), copiedListIter->next());
-
-
-    cout << "passed" << endl;
 }
 
 
 
-void elementFindTests(IList<int>& testList)
+template <class T>
+void elementFindTests()
 {
-    cout << "Element find tests" << endl;
-    resetAssertionCounter();
+    T testList;
 
     testList.add(5);
     testList.add(6);
@@ -221,8 +235,5 @@ void elementFindTests(IList<int>& testList)
 
     assertEquals(true, testList.contains(8));
     assertEquals(false, testList.contains(4));
-
-
-    cout << "passed" << endl;
 }
 
