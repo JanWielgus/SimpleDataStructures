@@ -12,70 +12,11 @@
 #define GROWINGARRAY_H
 
 #include "IArray.h"
+#include "ArrayIterator.h"
 
 
 namespace SimpleDataStructures
 {
-    template <class T>
-    class GrowingArrayIterator : public Iterator<T>
-    {
-    private:
-        T* currentElement = nullptr;
-        size_t remainingElements = 0;
-        T nullElement; // element returned when called next() when no elements were available
-
-    public:
-        GrowingArrayIterator() {}
-
-        GrowingArrayIterator(const GrowingArrayIterator&) = delete;
-        GrowingArrayIterator& operator=(const GrowingArrayIterator&) = delete;
-
-        bool hasNext() override
-        {
-            if (remainingElements == 0)
-                return false;
-            return true;
-        }
-
-
-        T& next() override
-        {
-            if (remainingElements == 0)
-                return nullElement;
-            else
-            {
-                T& elementToReturn = *currentElement;
-                currentElement++;
-                remainingElements--;
-                return elementToReturn;
-            }
-        }
-
-
-        /**
-         * @brief Prepare iterator to work.
-         * @param array Array to iterate through (pointer to the first element).
-         * @param size Amount of elements to iterate.
-         */
-        void setup(T* array, size_t size)
-        {
-            currentElement = array;
-            remainingElements = size;
-        }
-
-
-        /**
-         * @brief Makes that next call of hasNext() method of iterator will return false.
-         * This method is used after any modifications to outdate the iterator.
-         */
-        void reset()
-        {
-            remainingElements = 0;
-        }
-    };
-
-
-
     /**
      * @brief Array without fixed size.
      * Size is increased (by one) every time when full
@@ -90,7 +31,7 @@ namespace SimpleDataStructures
         size_t arraySize = 0; // amt of elements in the array
 
         T null_item; // returned when provided index is out of bounds
-        GrowingArrayIterator<T> iteratorInstance;
+        ArrayIterator<T> iteratorInstance;
 
 
     public:
@@ -270,7 +211,7 @@ namespace SimpleDataStructures
 
         Iterator<T>* iterator() override
         {
-            iteratorInstance.setup(array, arraySize);
+            iteratorInstance.reset(array, arraySize);
             return &iteratorInstance;
         }
 
