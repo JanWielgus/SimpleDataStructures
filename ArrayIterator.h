@@ -1,7 +1,7 @@
 /**
  * @file ArrayIterator.h
  * @author Jan Wielgus (jan.wielgus12@gmail.com)
- * @brief Concrete class for an array iterator.
+ * @brief Iterator for any array (expecially for IArray types).
  * @date 2021-04-18
  * 
  */
@@ -24,6 +24,10 @@ namespace SimpleDataStructures
         T nullElement; // element returned when called next() when no elements were available
 
     public:
+        ArrayIterator()
+        {
+        }
+
         explicit ArrayIterator(IArray<T>& array)
         {
             nextElement = array.toArray();
@@ -57,6 +61,26 @@ namespace SimpleDataStructures
             nextElement++;
             remainingElements--;
             return elementToReturn;
+        }
+
+
+        void reset()
+        {
+            remainingElements = 0;
+        }
+
+
+        void reset(IArray<T>& array)
+        {
+            nextElement = array.toArray();
+            remainingElements = array.size();
+        }
+
+
+        void reset(T* firstElement, size_t size)
+        {
+            nextElement = firstElement;
+            remainingElements = size;
         }
     };
 }
