@@ -23,10 +23,21 @@ namespace SimpleDataStructures
         T nullElement;
 
     public:
-        ListIterator(IList<T>* list)
+        ListIterator(IList<T>& list)
         {
-            this->list = list;
+            this->list = &list;
             nextIndex = 0;
+        }
+
+        ListIterator(const ListIterator& other)
+            : list(other.list), nextIndex(other.nextIndex)
+        {
+        }
+
+        ListIterator& operator=(const ListIterator& other)
+        {
+            list = other.list;
+            nextIndex = other.nextIndex;
         }
 
         bool hasNext() override
@@ -46,7 +57,18 @@ namespace SimpleDataStructures
         bool remove() override
         {
             --nextIndex;
-            list->remove(nextIndex);
+            return list->remove(nextIndex);
+        }
+
+        void reset()
+        {
+            list = nullptr;
+        }
+
+        void reset(IList<T>& list)
+        {
+            this->list = &list;
+            nextIndex = 0;
         }
     };
 }
