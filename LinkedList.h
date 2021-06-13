@@ -109,6 +109,9 @@ namespace SimpleDataStructures
         size_t linkedListSize = 0;
         LinkedListIterator<T> iteratorInstance;
 
+        Node<T>* cachedNode = nullptr;
+        size_t cachedNodeIndex = 0;
+
         T nullElement; // element returned for example when used get() on empty list
 
 
@@ -184,6 +187,8 @@ namespace SimpleDataStructures
             }
             
             linkedListSize++;
+            cachedNode = nullptr;
+
             return true;
         }
 
@@ -211,6 +216,7 @@ namespace SimpleDataStructures
             }
 
             linkedListSize++;
+            cachedNode = nullptr;
             
             return true;
         }
@@ -251,7 +257,10 @@ namespace SimpleDataStructures
             
             delete toDelete;
             linkedListSize--;
+            cachedNode = nullptr;
+
             iteratorInstance.reset();
+
             return true;
         }
 
@@ -351,6 +360,8 @@ namespace SimpleDataStructures
             root = nullptr;
             tail = nullptr;
             linkedListSize = 0;
+            cachedNode = nullptr;
+
             iteratorInstance.reset();
         }
 
@@ -365,11 +376,27 @@ namespace SimpleDataStructures
             if (index == linkedListSize - 1)
                 return tail;
 
-            Node<T>* lookedFor = root;
-            for (size_t i = 0; i < index; i++)
-                lookedFor = lookedFor->next;
+            Node<T>* startNode = root;
+            size_t i = 0;
+
+            // Check if node could be found faster
+            if (cachedNode != nullptr && cachedNodeIndex <= index)
+            {
+                startNode = cachedNode;
+                i = cachedNodeIndex;
+            }
+
+            while (i < index)
+            {
+                startNode = startNode->next;
+                i++;
+            }
+
+            // Store new cached node
+            const_cast<LinkedList*>(this)->cachedNode = startNode;
+            const_cast<LinkedList*>(this)->cachedNodeIndex = index;
             
-            return lookedFor;
+            return startNode;
         }
 
 
@@ -417,7 +444,10 @@ namespace SimpleDataStructures
             
             delete nodeToRemove;
             linkedListSize--;
+            cachedNode = nullptr;
+
             iteratorInstance.reset();
+
             return true;
         }
 
@@ -435,6 +465,8 @@ namespace SimpleDataStructures
                 delete nodeToDel;
                 nodeToDel = next;
             }
+
+            cachedNode = nullptr;
         }
 
 
@@ -480,6 +512,8 @@ namespace SimpleDataStructures
             tail->next = nullptr;
 
             linkedListSize = other.linkedListSize;
+
+            cachedNode = nullptr;
         }
     };
 }
