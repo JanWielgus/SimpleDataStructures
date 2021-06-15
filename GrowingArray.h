@@ -31,7 +31,6 @@ namespace SimpleDataStructures
         size_t arraySize = 0; // amt of elements in the array
 
         T null_item; // returned when provided index is out of bounds
-        ArrayIterator<T> iteratorInstance;
 
 
     public:
@@ -80,7 +79,6 @@ namespace SimpleDataStructures
             toMove.array = nullptr;
             toMove.AllocatedSize = 0;
             toMove.arraySize = 0;
-            toMove.iteratorInstance.reset();
         }
 
 
@@ -107,8 +105,6 @@ namespace SimpleDataStructures
                     array[i] = other.array[i];
                 
                 arraySize = other.arraySize;
-
-                iteratorInstance.reset();
             }
 
             return *this;
@@ -128,7 +124,6 @@ namespace SimpleDataStructures
                 toMove.array = nullptr;
                 toMove.AllocatedSize = 0;
                 toMove.arraySize = 0;
-                toMove.iteratorInstance.reset();
             }
 
             return *this;
@@ -173,7 +168,6 @@ namespace SimpleDataStructures
                 array[i - 1] = array[i];
             
             arraySize--;
-            iteratorInstance.reset();
             return true;
             // TODO: add decreasing size of the allocated space
         }
@@ -206,13 +200,6 @@ namespace SimpleDataStructures
         T* toArray() override
         {
             return array;
-        }
-
-
-        Iterator<T>* iterator() override
-        {
-            iteratorInstance.reset(array, arraySize);
-            return &iteratorInstance;
         }
 
 
@@ -269,7 +256,6 @@ namespace SimpleDataStructures
             array = nullptr;
             AllocatedSize = 0;
             arraySize = 0;
-            iteratorInstance.reset();
         }
 
 
@@ -326,8 +312,6 @@ namespace SimpleDataStructures
             }
 
             AllocatedSize = minimumSize;
-
-            iteratorInstance.reset();
         }
     };
 }
