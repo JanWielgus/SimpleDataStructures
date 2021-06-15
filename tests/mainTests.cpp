@@ -50,6 +50,10 @@ template <class T>
 void copyingTests();
 template <class T>
 void elementFindTests();
+template <class T>
+void iteratorTest();
+template <class T>
+void removingUsingIteratorTest();
 
 
 
@@ -87,6 +91,8 @@ void performTests(string header)
     performSingleTest(firstListTest<T>, "firstListTest");
     performSingleTest(copyingTests<T>, "copyingTests");
     performSingleTest(elementFindTests<T>, "elementFindTests");
+    performSingleTest(iteratorTest<T>, "iteratorTest");
+    performSingleTest(removingUsingIteratorTest<T>, "removingUsingIteratorTest");
     // other tests...
 }
 
@@ -241,5 +247,71 @@ void elementFindTests()
 
     assertEquals(true, testList.contains(8));
     assertEquals(false, testList.contains(4));
+}
+
+
+
+template <class T>
+void iteratorTest()
+{
+    T testList;
+
+    for (int i = 0; i < 100; i++)
+        testList.add(i);
+    
+    ListIterator iter(testList);
+    int i = 0;
+    while (iter.hasNext())
+        assertEquals(i++, iter.next());
+
+    assertEquals<size_t>(100, testList.size());
+    assertEquals<int>(100, i);
+
+
+    iter.reset(testList);
+    i = 0;
+    while (iter.hasNext())
+        assertEquals(i++, iter.next());
+
+    assertEquals<int>(100, i);
+
+
+    iter.reset();
+    assertEquals<bool>(false, iter.hasNext());
+}
+
+
+
+template <class T>
+void removingUsingIteratorTest()
+{
+    T testList;
+
+    for (int i = 0; i < 100; i++)
+        testList.add(i);
+
+    ListIterator iter(testList);
+    int i = 0;
+    while (iter.hasNext())
+    {
+        assertEquals(i++, iter.next());
+
+        if ((i-1) % 2 == 0) // remove even numbers
+        {
+            bool rmResult = iter.remove();
+            assertEquals<bool>(true, rmResult);
+        }
+    }
+
+    assertEquals<size_t>(50, testList.size());
+
+
+    iter.reset(testList);
+    i = 1;
+    while (iter.hasNext())
+    {
+        assertEquals(i, iter.next());
+        i += 2;
+    }
 }
 
