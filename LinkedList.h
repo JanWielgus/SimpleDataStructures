@@ -34,7 +34,16 @@ namespace SimpleDataStructures
 
 
 
+    template <class T>
+    class LinkedList;
 
+
+
+    /**
+     * @brief Iterator only for the LinkedList.
+     * It is a little bit faster than ListIterator
+     * but cannot remove elements.
+     */
     template <class T>
     class LinkedListIterator : public Iterator<T>
     {
@@ -42,7 +51,7 @@ namespace SimpleDataStructures
         T nullElement;
 
     public:
-        LinkedListIterator() {}
+        LinkedListIterator(const LinkedList<T>& linkedList);
 
         LinkedListIterator(const LinkedListIterator&) = delete;
         LinkedListIterator& operator=(const LinkedListIterator&) = delete;
@@ -85,13 +94,9 @@ namespace SimpleDataStructures
 
 
         /**
-         * @brief Initialize the iterator.
-         * @param startNode Node from the iteration will begin.
+         * @brief Resets the iterator.
          */
-        void setup(Node<T>* startNode)
-        {
-            nextNode = startNode;
-        }
+        void reset(const LinkedList<T>& linkedList);
     };
 
 
@@ -103,7 +108,9 @@ namespace SimpleDataStructures
         Node<T>* root = nullptr;
         Node<T>* tail = nullptr;
         size_t linkedListSize = 0;
-        LinkedListIterator<T> iteratorInstance;
+
+        Node<T>* cachedNode = nullptr;
+        size_t cachedNodeIndex = 0;
 
         T nullElement; // element returned for example when used get() on empty list
 
@@ -127,7 +134,7 @@ namespace SimpleDataStructures
             toMove.root = nullptr;
             toMove.tail = nullptr;
             toMove.linkedListSize = 0;
-            toMove.iteratorInstance.reset();
+            toMove.cachedNode = nullptr;
         }
 
 
@@ -159,7 +166,7 @@ namespace SimpleDataStructures
                 toMove.root = nullptr;
                 toMove.tail = nullptr;
                 toMove.linkedListSize = 0;
-                toMove.iteratorInstance.reset();
+                toMove.cachedNode = nullptr;
             }
 
             return *this;
@@ -180,6 +187,8 @@ namespace SimpleDataStructures
             }
             
             linkedListSize++;
+            cachedNode = nullptr;
+
             return true;
         }
 
@@ -207,6 +216,7 @@ namespace SimpleDataStructures
             }
 
             linkedListSize++;
+            cachedNode = nullptr;
             
             return true;
         }
@@ -214,8 +224,7 @@ namespace SimpleDataStructures
 
         /**
          * @brief Remove element at specified index.
-         * The fastest is removing the first element, slowest is removing the last one.
-         * 
+         * Removing the first element is fastest, slowest is removing the last one.
          * @param index Index of element to be removed from the linked list.
          * @return true if element was removed. Return false if list is empty
          * or index is out of bounds.
@@ -247,7 +256,8 @@ namespace SimpleDataStructures
             
             delete toDelete;
             linkedListSize--;
-            iteratorInstance.reset();
+            cachedNode = nullptr;
+
             return true;
         }
 
@@ -277,13 +287,6 @@ namespace SimpleDataStructures
         {
             Node<T>* toReturn = getNode(index);
             return toReturn == nullptr ? nullElement : toReturn->data;
-        }
-
-
-        Iterator<T>* iterator() override
-        {
-            iteratorInstance.setup(root);
-            return &iteratorInstance;
         }
 
         
@@ -347,7 +350,7 @@ namespace SimpleDataStructures
             root = nullptr;
             tail = nullptr;
             linkedListSize = 0;
-            iteratorInstance.reset();
+            cachedNode = nullptr;
         }
 
 
@@ -361,11 +364,27 @@ namespace SimpleDataStructures
             if (index == linkedListSize - 1)
                 return tail;
 
-            Node<T>* lookedFor = root;
-            for (size_t i = 0; i < index; i++)
-                lookedFor = lookedFor->next;
+            Node<T>* startNode = root;
+            size_t i = 0;
+
+            // Check if node could be found faster
+            if (cachedNode != nullptr && cachedNodeIndex <= index)
+            {
+                startNode = cachedNode;
+                i = cachedNodeIndex;
+            }
+
+            while (i < index)
+            {
+                startNode = startNode->next;
+                i++;
+            }
+
+            // Store new cached node
+            const_cast<LinkedList*>(this)->cachedNode = startNode;
+            const_cast<LinkedList*>(this)->cachedNodeIndex = index;
             
-            return lookedFor;
+            return startNode;
         }
 
 
@@ -413,7 +432,8 @@ namespace SimpleDataStructures
             
             delete nodeToRemove;
             linkedListSize--;
-            iteratorInstance.reset();
+            cachedNode = nullptr;
+
             return true;
         }
 
@@ -431,6 +451,8 @@ namespace SimpleDataStructures
                 delete nodeToDel;
                 nodeToDel = next;
             }
+
+            cachedNode = nullptr;
         }
 
 
@@ -476,8 +498,26 @@ namespace SimpleDataStructures
             tail->next = nullptr;
 
             linkedListSize = other.linkedListSize;
+
+            cachedNode = nullptr;
         }
     };
+
+
+
+
+    template <class T>
+    LinkedListIterator<T>::LinkedListIterator(const LinkedList<T>& linkedList)
+    {
+        nextNode = linkedList.root;
+    }
+
+
+    template <class T>
+    void LinkedListIterator<T>::reset(const LinkedList<T>& linkedList)
+    {
+        nextNode = nullptr;
+    }
 }
 
 

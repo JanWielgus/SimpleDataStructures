@@ -75,14 +75,6 @@ namespace SimpleDataStructures
         virtual const T& operator[](size_t index) const = 0;
 
         /**
-         * @return Return pointer to the iterator set to the first element.
-         * You mustn't delete this pointer.
-         * Always return the same pointer but each time reset the iterator.
-         * Use this pointer, don't copy the instance.
-         */
-        virtual Iterator<T>* iterator() = 0;
-
-        /**
          * @brief Replace item at the specified index with another item.
          * Old item is just deleted from the array.
          * @param newItem New item that will be put in the index

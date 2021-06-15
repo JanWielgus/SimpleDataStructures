@@ -16,70 +16,11 @@
 
 namespace SimpleDataStructures
 {
-    template <class T>
-    class GrowingArrayIterator : public Iterator<T>
-    {
-    private:
-        T* currentElement = nullptr;
-        size_t remainingElements = 0;
-        T nullElement; // element returned when called next() when no elements were available
-
-    public:
-        GrowingArrayIterator() {}
-
-        GrowingArrayIterator(const GrowingArrayIterator&) = delete;
-        GrowingArrayIterator& operator=(const GrowingArrayIterator&) = delete;
-
-        bool hasNext() override
-        {
-            if (remainingElements == 0)
-                return false;
-            return true;
-        }
-
-
-        T& next() override
-        {
-            if (remainingElements == 0)
-                return nullElement;
-            else
-            {
-                T& elementToReturn = *currentElement;
-                currentElement++;
-                remainingElements--;
-                return elementToReturn;
-            }
-        }
-
-
-        /**
-         * @brief Prepare iterator to work.
-         * @param array Array to iterate through (pointer to the first element).
-         * @param size Amount of elements to iterate.
-         */
-        void setup(T* array, size_t size)
-        {
-            currentElement = array;
-            remainingElements = size;
-        }
-
-
-        /**
-         * @brief Makes that next call of hasNext() method of iterator will return false.
-         * This method is used after any modifications to outdate the iterator.
-         */
-        void reset()
-        {
-            remainingElements = 0;
-        }
-    };
-
-
-
     /**
      * @brief Array without fixed size.
      * Size is increased (by one) every time when full
      * and new element is added and size is not sufficient.
+     * Size can also be increased manually at any time.
      * @tparam T Array type.
      */
     template <class T>
@@ -90,10 +31,12 @@ namespace SimpleDataStructures
         size_t arraySize = 0; // amt of elements in the array
 
         T null_item; // returned when provided index is out of bounds
-        GrowingArrayIterator<T> iteratorInstance;
 
 
     public:
+        /**
+         * @brief Construct a new empty GrowingArray object.
+         */
         GrowingArray()
         {
             array = nullptr;
@@ -102,6 +45,11 @@ namespace SimpleDataStructures
         }
 
 
+        /**
+         * @brief Construct a new GrowingArray object and allocate
+         * internal array of specified size.
+         * @param initialSize Size of the allocated internal array.
+         */
         explicit GrowingArray(size_t initialSize)
         {
             ensureCapacity(initialSize, false);
@@ -139,7 +87,6 @@ namespace SimpleDataStructures
             toMove.array = nullptr;
             toMove.AllocatedSize = 0;
             toMove.arraySize = 0;
-            toMove.iteratorInstance.reset();
         }
 
 
@@ -152,9 +99,6 @@ namespace SimpleDataStructures
         /**
          * @brief Overloaded assignment operator.
          * Size of the new array is only the amount of data inside the copied array.
-         * 
-         * @param other 
-         * @return GrowingArray& 
          */
         GrowingArray& operator=(const GrowingArray& other)
         {
@@ -166,8 +110,6 @@ namespace SimpleDataStructures
                     array[i] = other.array[i];
                 
                 arraySize = other.arraySize;
-
-                iteratorInstance.reset();
             }
 
             return *this;
@@ -187,7 +129,6 @@ namespace SimpleDataStructures
                 toMove.array = nullptr;
                 toMove.AllocatedSize = 0;
                 toMove.arraySize = 0;
-                toMove.iteratorInstance.reset();
             }
 
             return *this;
@@ -232,7 +173,6 @@ namespace SimpleDataStructures
                 array[i - 1] = array[i];
             
             arraySize--;
-            iteratorInstance.reset();
             return true;
             // TODO: add decreasing size of the allocated space
         }
@@ -265,13 +205,6 @@ namespace SimpleDataStructures
         T* toArray() override
         {
             return array;
-        }
-
-
-        Iterator<T>* iterator() override
-        {
-            iteratorInstance.setup(array, arraySize);
-            return &iteratorInstance;
         }
 
 
@@ -328,14 +261,15 @@ namespace SimpleDataStructures
             array = nullptr;
             AllocatedSize = 0;
             arraySize = 0;
-            iteratorInstance.reset();
         }
 
 
 
 
-
-
+        /**
+         * @brief Check size of the allocated array inside.
+         * @return Size of the allocated array.
+         */
         size_t capacity() const
         {
             return AllocatedSize;
@@ -343,9 +277,9 @@ namespace SimpleDataStructures
 
 
         /**
-         * @brief Make array to have at least provided size
-         * (old data will remain untouched).
-         * This method don't shrink the allocated space.
+         * @brief Increase size of allocated array if needed, that
+         * adding elements within that size will be in O(1) time.
+         * Data will remain unchanged.
          * @param minimumSize Minimum size that array should have.
          */
         void ensureCapacity(size_t minimumSize)
@@ -385,8 +319,6 @@ namespace SimpleDataStructures
             }
 
             AllocatedSize = minimumSize;
-
-            iteratorInstance.reset();
         }
     };
 }
