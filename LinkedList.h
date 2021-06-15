@@ -36,7 +36,15 @@ namespace SimpleDataStructures
 
 
 
+    template <class T>
+    class LinkedList;
 
+
+
+    /**
+     * @brief Iterator only for the LinkedList.
+     * It is a little bit faster than ListIterator.
+     */
     template <class T>
     class LinkedListIterator : public Iterator<T>
     {
@@ -44,9 +52,7 @@ namespace SimpleDataStructures
         T nullElement;
 
     public:
-        LinkedListIterator() {}
-
-        // TODO: other ctors
+        LinkedListIterator(const LinkedList<T>& linkedList);
 
         LinkedListIterator(const LinkedListIterator&) = delete;
         LinkedListIterator& operator=(const LinkedListIterator&) = delete;
@@ -89,13 +95,9 @@ namespace SimpleDataStructures
 
 
         /**
-         * @brief Initialize the iterator.
-         * @param startNode Node from the iteration will begin.
+         * @brief Resets the iterator.
          */
-        void setup(Node<T>* startNode)
-        {
-            nextNode = startNode;
-        }
+        void reset(const LinkedList<T>& linkedList);
     };
 
 
@@ -107,7 +109,6 @@ namespace SimpleDataStructures
         Node<T>* root = nullptr;
         Node<T>* tail = nullptr;
         size_t linkedListSize = 0;
-        LinkedListIterator<T> iteratorInstance;
 
         Node<T>* cachedNode = nullptr;
         size_t cachedNodeIndex = 0;
@@ -134,7 +135,7 @@ namespace SimpleDataStructures
             toMove.root = nullptr;
             toMove.tail = nullptr;
             toMove.linkedListSize = 0;
-            toMove.iteratorInstance.reset();
+            toMove.cachedNode = nullptr;
         }
 
 
@@ -166,7 +167,7 @@ namespace SimpleDataStructures
                 toMove.root = nullptr;
                 toMove.tail = nullptr;
                 toMove.linkedListSize = 0;
-                toMove.iteratorInstance.reset();
+                toMove.cachedNode = nullptr;
             }
 
             return *this;
@@ -259,8 +260,6 @@ namespace SimpleDataStructures
             linkedListSize--;
             cachedNode = nullptr;
 
-            iteratorInstance.reset();
-
             return true;
         }
 
@@ -290,13 +289,6 @@ namespace SimpleDataStructures
         {
             Node<T>* toReturn = getNode(index);
             return toReturn == nullptr ? nullElement : toReturn->data;
-        }
-
-
-        Iterator<T>* iterator() override
-        {
-            iteratorInstance.setup(root);
-            return &iteratorInstance;
         }
 
         
@@ -361,8 +353,6 @@ namespace SimpleDataStructures
             tail = nullptr;
             linkedListSize = 0;
             cachedNode = nullptr;
-
-            iteratorInstance.reset();
         }
 
 
@@ -446,8 +436,6 @@ namespace SimpleDataStructures
             linkedListSize--;
             cachedNode = nullptr;
 
-            iteratorInstance.reset();
-
             return true;
         }
 
@@ -516,6 +504,22 @@ namespace SimpleDataStructures
             cachedNode = nullptr;
         }
     };
+
+
+
+
+    template <class T>
+    LinkedListIterator<T>::LinkedListIterator(const LinkedList<T>& linkedList)
+    {
+        nextNode = linkedList.root;
+    }
+
+
+    template <class T>
+    void LinkedListIterator<T>::reset(const LinkedList<T>& linkedList)
+    {
+        nextNode = nullptr;
+    }
 }
 
 
