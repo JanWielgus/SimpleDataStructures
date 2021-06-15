@@ -57,6 +57,9 @@ namespace SimpleDataStructures
 
         bool remove() override
         {
+            if (list == nullptr || nextIndex == 0)
+                return false;
+            
             --nextIndex;
             return list->remove(nextIndex);
         }
