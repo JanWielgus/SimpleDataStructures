@@ -225,8 +225,7 @@ namespace SimpleDataStructures
 
         /**
          * @brief Remove element at specified index.
-         * The fastest is removing the first element, slowest is removing the last one.
-         * 
+         * Removing the first element is fastest, slowest is removing the last one.
          * @param index Index of element to be removed from the linked list.
          * @return true if element was removed. Return false if list is empty
          * or index is out of bounds.

@@ -21,6 +21,7 @@ namespace SimpleDataStructures
      * @brief Array without fixed size.
      * Size is increased (by one) every time when full
      * and new element is added and size is not sufficient.
+     * Size can also be increased manually at any time.
      * @tparam T Array type.
      */
     template <class T>
@@ -34,6 +35,9 @@ namespace SimpleDataStructures
 
 
     public:
+        /**
+         * @brief Construct a new empty GrowingArray object.
+         */
         GrowingArray()
         {
             array = nullptr;
@@ -42,6 +46,11 @@ namespace SimpleDataStructures
         }
 
 
+        /**
+         * @brief Construct a new GrowingArray object and allocate
+         * internal array of specified size.
+         * @param initialSize Size of the allocated internal array.
+         */
         explicit GrowingArray(size_t initialSize)
         {
             ensureCapacity(initialSize, false);
@@ -91,9 +100,6 @@ namespace SimpleDataStructures
         /**
          * @brief Overloaded assignment operator.
          * Size of the new array is only the amount of data inside the copied array.
-         * 
-         * @param other 
-         * @return GrowingArray& 
          */
         GrowingArray& operator=(const GrowingArray& other)
         {
@@ -261,8 +267,10 @@ namespace SimpleDataStructures
 
 
 
-
-
+        /**
+         * @brief Check size of the allocated array inside.
+         * @return Size of the allocated array.
+         */
         size_t capacity() const
         {
             return AllocatedSize;
@@ -270,9 +278,9 @@ namespace SimpleDataStructures
 
 
         /**
-         * @brief Make array to have at least provided size
-         * (old data will remain untouched).
-         * This method don't shrink the allocated space.
+         * @brief Increase size of allocated array if needed, that
+         * adding elements within that size will be in O(1) time.
+         * Data will remain unchanged.
          * @param minimumSize Minimum size that array should have.
          */
         void ensureCapacity(size_t minimumSize)

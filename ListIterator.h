@@ -65,12 +65,19 @@ namespace SimpleDataStructures
         }
 
 
+        /**
+         * @brief Disables iterator (hasNext() will remove false).
+         */
         void reset()
         {
             list = nullptr;
         }
         
 
+        /**
+         * @brief Sets iterator on the passed list.
+         * @param list reference to list to iterate though.
+         */
         void reset(IList<T>& list)
         {
             this->list = &list;
