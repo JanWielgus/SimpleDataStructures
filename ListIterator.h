@@ -15,12 +15,17 @@
 
 namespace SimpleDataStructures
 {
+    /**
+     * @brief Iterator for all classes that implement IList interface.
+     * Can remove elements while iterating.
+     */
     template <class T>
     class ListIterator : public RemovingIterator<T>
     {
         IList<T>* list = nullptr;
         size_t nextIndex;
         T nullElement;
+
 
     public:
         ListIterator(IList<T>& list)
@@ -29,21 +34,16 @@ namespace SimpleDataStructures
             nextIndex = 0;
         }
 
-        ListIterator(const ListIterator& other)
-            : list(other.list), nextIndex(other.nextIndex)
-        {
-        }
 
-        ListIterator& operator=(const ListIterator& other)
-        {
-            list = other.list;
-            nextIndex = other.nextIndex;
-        }
+        ListIterator(const ListIterator&) = delete;
+        ListIterator& operator=(const ListIterator&) = delete;
+
 
         bool hasNext() override
         {
             return list != nullptr && nextIndex < list->size();
         }
+
 
         T& next() override
         {
@@ -54,16 +54,19 @@ namespace SimpleDataStructures
             return list->get(nextIndex - 1);
         }
 
+
         bool remove() override
         {
             --nextIndex;
             return list->remove(nextIndex);
         }
 
+
         void reset()
         {
             list = nullptr;
         }
+        
 
         void reset(IList<T>& list)
         {
