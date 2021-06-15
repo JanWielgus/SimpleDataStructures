@@ -203,6 +203,9 @@ void copyingTests()
     while (testListIter.hasNext())
         assertEquals(testListIter.next(), copiedListIter.next());
 
+    assertEquals<bool>(false, testListIter.hasNext());
+    assertEquals<bool>(false, copiedListIter.hasNext());
+
 
     // -- assignment tests --
     
@@ -224,6 +227,9 @@ void copyingTests()
     copiedListIter.reset(copiedList);
     while (testListIter.hasNext())
         assertEquals(testListIter.next(), copiedListIter.next());
+
+    assertEquals<bool>(false, testListIter.hasNext());
+    assertEquals<bool>(false, copiedListIter.hasNext());
 }
 
 

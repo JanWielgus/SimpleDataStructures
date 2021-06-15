@@ -12,7 +12,6 @@
 #define GROWINGARRAY_H
 
 #include "IArray.h"
-#include "ArrayIterator.h"
 
 
 namespace SimpleDataStructures

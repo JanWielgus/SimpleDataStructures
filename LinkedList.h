@@ -11,8 +11,6 @@
 
 #include "IList.h"
 
-// TODO: implement caching (O(1) sequential access time eg. get(0), get(1), ...)
-
 
 namespace SimpleDataStructures
 {
@@ -43,7 +41,8 @@ namespace SimpleDataStructures
 
     /**
      * @brief Iterator only for the LinkedList.
-     * It is a little bit faster than ListIterator.
+     * It is a little bit faster than ListIterator
+     * but cannot remove elements.
      */
     template <class T>
     class LinkedListIterator : public Iterator<T>
