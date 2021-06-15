@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include "../LinkedList.h"
 #include "../GrowingArray.h"
+#include "../ListIterator.h"
 
 using namespace std;
 using namespace SimpleDataStructures;
@@ -30,10 +31,10 @@ void resetAssertionCounter()
 template <class T>
 void showListUsingIterator(IList<T>& list)
 {
-    Iterator<T>* iter = list.iterator();
+    ListIterator<T> iter(list);
     int counter = 0;
-    while (iter->hasNext())
-        cout << counter++ << ". " << iter->next() << endl;;
+    while (iter.hasNext())
+        cout << counter++ << ". " << iter.next() << endl;
 }
 
 
@@ -191,10 +192,10 @@ void copyingTests()
     assertEquals(testList.size(), copiedList.size());
     for (int i=0; i < testList.size(); i++)
         assertEquals(testList.get(i), copiedList.get(i));
-    auto testListIter = testList.iterator();
-    auto copiedListIter = copiedList.iterator();
-    while (testListIter->hasNext())
-        assertEquals(testListIter->next(), copiedListIter->next());
+    ListIterator testListIter(testList);
+    ListIterator copiedListIter(copiedList);
+    while (testListIter.hasNext())
+        assertEquals(testListIter.next(), copiedListIter.next());
 
 
     // -- assignment tests --
@@ -213,10 +214,10 @@ void copyingTests()
     assertEquals(testList.size(), copiedList.size());
     for (int i=0; i < testList.size(); i++)
         assertEquals(testList.get(i), copiedList.get(i));
-    testListIter = testList.iterator();
-    copiedListIter = copiedList.iterator();
-    while (testListIter->hasNext())
-        assertEquals(testListIter->next(), copiedListIter->next());
+    testListIter.reset(testList);
+    copiedListIter.reset(copiedList);
+    while (testListIter.hasNext())
+        assertEquals(testListIter.next(), copiedListIter.next());
 }
 
 
