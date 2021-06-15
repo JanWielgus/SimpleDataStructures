@@ -24,10 +24,6 @@ namespace SimpleDataStructures
         T nullElement; // element returned when called next() when no elements were available
 
     public:
-        ArrayIterator()
-        {
-        }
-
         explicit ArrayIterator(IArray<T>& array)
         {
             nextElement = array.toArray();
