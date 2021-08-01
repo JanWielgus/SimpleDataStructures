@@ -114,6 +114,8 @@ namespace SimpleDataStructures
 
         T nullElement; // element returned for example when used get() on empty list
 
+        friend class LinkedListIterator<T>;
+
 
     public:
         LinkedList() {}
