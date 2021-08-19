@@ -57,6 +57,25 @@ namespace SimpleDataStructures
         LinkedListIterator& operator=(const LinkedListIterator&) = delete;
 
 
+        LinkedListIterator(LinkedListIterator&& toMove)
+        {
+            nextNode = toMove.nextNode;
+            toMove.nextNode = nullptr;
+        }
+
+
+        LinkedListIterator& operator=(LinkedListIterator&& toMove)
+        {
+            if (this != &toMove)
+            {
+                nextNode = toMove.nextNode;
+                toMove.nextNode = nullptr;
+            }
+
+            return *this;
+        }
+
+
         /**
          * @return trueif there is some data to be obtained
          * by calling next() method. If returned false,

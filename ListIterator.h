@@ -39,6 +39,31 @@ namespace SimpleDataStructures
         ListIterator& operator=(const ListIterator&) = delete;
 
 
+        ListIterator(ListIterator&& toMove)
+        {
+            list = toMove.list;
+            nextIndex = toMove.nextIndex;
+
+            toMove.list = nullptr;
+            toMove.nextIndex = 0;
+        }
+
+
+        ListIterator& operator=(ListIterator&& toMove)
+        {
+            if (this != &toMove)
+            {
+                list = toMove.list;
+                nextIndex = toMove.nextIndex;
+
+                toMove.list = nullptr;
+                toMove.nextIndex = 0;
+            }
+
+            return *this;
+        }
+
+
         bool hasNext() override
         {
             return list != nullptr && nextIndex < list->size();

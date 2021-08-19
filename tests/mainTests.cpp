@@ -31,7 +31,7 @@ void resetAssertionCounter()
 template <class T>
 void showListUsingIterator(IList<T>& list)
 {
-    ListIterator<T> iter(list);
+    auto iter = ListIterator<T>(list);
     int counter = 0;
     while (iter.hasNext())
         cout << counter++ << ". " << iter.next() << endl;
@@ -198,8 +198,8 @@ void copyingTests()
     assertEquals(testList.size(), copiedList.size());
     for (int i=0; i < testList.size(); i++)
         assertEquals(testList.get(i), copiedList.get(i));
-    ListIterator testListIter(testList);
-    ListIterator copiedListIter(copiedList);
+    auto testListIter = ListIterator(testList);
+    auto copiedListIter = ListIterator(copiedList);
     while (testListIter.hasNext())
         assertEquals(testListIter.next(), copiedListIter.next());
 
@@ -265,7 +265,7 @@ void iteratorTest()
     for (int i = 0; i < 100; i++)
         testList.add(i);
     
-    ListIterator iter(testList);
+    auto iter = ListIterator(testList);
     int i = 0;
     while (iter.hasNext())
         assertEquals(i++, iter.next());
@@ -296,7 +296,7 @@ void removingUsingIteratorTest()
     for (int i = 0; i < 100; i++)
         testList.add(i);
 
-    ListIterator iter(testList);
+    auto iter = ListIterator(testList);
     int i = 0;
     while (iter.hasNext())
     {

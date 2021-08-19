@@ -42,6 +42,31 @@ namespace SimpleDataStructures
         ArrayIterator& operator=(const ArrayIterator&) = delete;
 
 
+        ArrayIterator(ArrayIterator&& toMove)
+        {
+            nextElement = toMove.nextElement;
+            remainingElements = toMove.remainingElements;
+
+            toMove.nextElement = nullptr;
+            toMove.remainingElements = 0;
+        }
+
+
+        ArrayIterator& operator=(ArrayIterator&& toMove)
+        {
+            if (this != &toMove)
+            {
+                nextElement = toMove.nextElement;
+                remainingElements = toMove.remainingElements;
+
+                toMove.nextElement = nullptr;
+                toMove.remainingElements = 0;
+            }
+
+            return *this;
+        }
+
+
         bool hasNext() override
         {
             return remainingElements != 0;
