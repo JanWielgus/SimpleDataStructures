@@ -208,6 +208,12 @@ namespace SimpleDataStructures
         }
 
 
+        const T* toArray() const override
+        {
+            return array;
+        }
+
+
         bool replace(const T& newItem, size_t index) override
         {
             if (index >= arraySize)

@@ -26,6 +26,8 @@ namespace SimpleDataStructures
          */
         virtual T* toArray() = 0;
 
+        virtual const T* toArray() const = 0;
+
         /**
          * @brief Checks if array is full.
          * 
